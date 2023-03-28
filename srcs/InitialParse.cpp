@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 16:37:38 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/03/23 16:18:36 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/03/27 13:07:07 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ InitialParse::InitialParse(int argc, char **argv) throw(std::runtime_error) {
 	std::stringstream	sstream;
 	sstream << argv[1];
 	sstream >> this->_port;
-	this->_password = *argv[2];
+	this->_password = argv[2];
 	
 }
 

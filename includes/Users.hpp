@@ -1,31 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   Users.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/22 15:48:33 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/03/27 11:09:05 by uisroilo         ###   ########.fr       */
+/*   Created: 2023/03/26 14:09:22 by uisroilo          #+#    #+#             */
+/*   Updated: 2023/03/28 13:32:08 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "includes/InitialParse.hpp"
-#include "includes/CommandParse.hpp"
-#include "includes/Server.hpp"
+#ifndef USERS_HPP
+# define USERS_HPP
 
-int	main(int argc, char **argv) {
-	try
-	{
-		InitialParse	objParse(argc, argv);
-		Server			objServer(objParse.getPort(), objParse.getPassword());
-		objServer.run();
-		
-	}
-	catch(const std::exception& e)
-	{
-		std::cerr << e.what() << '\n';
-		return 1;
-	}
+#include <iostream>
+
+class Users
+{
+private:
+	int	user_fd;
+	std::string	user_nick;
+	std::string	username;
 	
-}
+public:
+	Users(int fd, std::string pre_nick, std::string pre_username);
+	void	setNick(std::string nick);
+	std::string	getUserNick(void) const;
+	std::string	getUserName(void) const;
+	int			getUserFd(void) const;
+	~Users();
+};
+
+#endif
