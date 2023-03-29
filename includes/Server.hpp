@@ -46,7 +46,7 @@ private:
 	int							_newFd;		// Newly accept()ed socket descriptor
 	struct	sockaddr_storage	_remoteaddr; // Client address
 	socklen_t					_addrlen;
-	char						_buf[256];    // Buffer for client data
+	char						_buf[512];    // Buffer for client data
 	// char						remoteIP[INET6_ADDRSTRLEN];
 	
 	int							_fdCount;
@@ -73,6 +73,7 @@ public:
 	void			ExistingConnection(int indexFd);
 	void			makeFdNonBlock(int fd) throw(std::runtime_error);
 	bool			requestFromServerToAuthonticate(int newUserFd);
+	void			ft_parse(int fd, std::string cmd) throw(std::runtime_error);
 	void			ft_print_users() const;
 	void			ft_show_usage(int fd) throw(std::runtime_error);
 	void			removeUserFromVector(int fd);

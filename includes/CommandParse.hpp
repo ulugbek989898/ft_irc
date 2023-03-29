@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/25 08:30:21 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/03/28 12:58:11 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/03/29 07:45:29 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 # define ERR_NICKNAMEINUSE " :Nickname is already in use"
 # define ERR_ERRONEUSNICKNAME " :Erroneus nickname"
 # define RAND_ERR "As second input it must 'NICK nickname'"
+# define ERR_ERRONEUSUSERNAME " :Erroneus nickname"
 
 class Users;
 

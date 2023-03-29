@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 07:05:48 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/03/28 15:38:55 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/03/29 10:17:44 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 int	Server::get_listener_socket(void)
 {
 	int listener;	 // Listening socket descriptor
-	int yes=1;		// For setsockopt() SO_REUSEADDR, below
+	int yes = 1;		// For setsockopt() SO_REUSEADDR, below
 	int rv;
 
 	struct addrinfo hints, *ai, *p;
@@ -67,7 +67,7 @@ int	Server::get_listener_socket(void)
 	return listener;
 }
 
-void			Server::checkStatusAndThrow(int exitCode, std::string msg) throw(std::runtime_error){
+void	Server::checkStatusAndThrow(int exitCode, std::string msg) throw(std::runtime_error){
 	if (exitCode < 0)
 		throw std::runtime_error(msg);
 }
@@ -82,7 +82,7 @@ struct pollfd	Server::createPollStruct(int fd, short events){
 	return temp;
 }
 
-void			Server::setUpPoll(){
+void	Server::setUpPoll(){
 	_fdCount = 1;
 	clientSockets.push_back(createPollStruct(_listener, POLLIN));
 }
@@ -97,7 +97,7 @@ Server::Server(int port, std::string password)
 	// Set up and get a listening socket
 	_listener = get_listener_socket();
 	checkStatusAndThrow(_listener, LISTEN_ERR);
-	printf("server: waiting for connections...\n");
+	std::cout << "server: waiting for connections...\n";
 	// Add the listener to set
 	setUpPoll();
 	
@@ -145,55 +145,25 @@ void	Server::makeFdNonBlock(int fd) throw(std::runtime_error){
 bool	Server::requestFromServerToAuthonticate(int newUserFd) {
 	int 		status;
 	std::string msg;
-	msg = "recieving error";
+	msg = PURPLE;
 
 	try
 	{
 		ft_show_usage(newUserFd);
+
+		ft_parse(newUserFd, "PASS");
+		ft_parse(newUserFd, "NICK");
+		ft_parse(newUserFd, "USER");
+		
+		msg += "Congrats, succesfully registered\r\n";
+		status = send(newUserFd, msg.c_str(), msg.length(), 0);
+		checkStatusAndThrow(status, SEND_ERR);
 	}
 	catch(const std::exception& e)
 	{
 		std::cerr << e.what() << '\n';
-	}
-
-	memset(&_buf, 0, sizeof(_buf));
-	int nbytes = recv(newUserFd, _buf, sizeof(_buf), 0);
-	if (nbytes <= 0) {
-		status = send(newUserFd, msg.c_str(), msg.length(), 0);
-		checkStatusAndThrow(status, SEND_ERR);
-	}
-	else {
-		try
-		{
-			cmdParse.parsePass(_buf, _password);
-			
-			memset(&_buf, 0, sizeof(_buf));
-			nbytes = recv(newUserFd, _buf, sizeof(_buf), 0);
-			if (nbytes <= 0) {
-				status = send(newUserFd, msg.c_str(), msg.length(), 0);
-				checkStatusAndThrow(status, SEND_ERR);
-			}
-			else
-				pre_nick = cmdParse.parseNick(_buf, _Users);
-			
-			memset(&_buf, 0, sizeof(_buf));
-			nbytes = recv(newUserFd, _buf, sizeof(_buf), 0);
-			if (nbytes <= 0) {
-				status = send(newUserFd, msg.c_str(), msg.length(), 0);
-				checkStatusAndThrow(status, SEND_ERR);
-			}
-			else
-				pre_username = cmdParse.parseUsername(_buf);
-			msg = "Congrats, succesfully registered\r\n";
-			status = send(newUserFd, msg.c_str(), msg.length(), 0);
-			checkStatusAndThrow(status, SEND_ERR);
-		}
-		catch(const std::exception& e)
-		{
-			std::cerr << e.what() << '\n';
-			close(newUserFd);
-			return false;
-		}
+		close(newUserFd);
+		return false;
 	}
 	return true;
 }
@@ -224,14 +194,13 @@ void	Server::ExistingConnection(int indexFd) {
 		// Got error or connection closed by client
 		if (nbytes == 0) {
 			// Connection closed
-			printf("pollserver: socket %d hung up\n", sender_fd);
+			std::cout << "pollserver: socket " << sender_fd << " hung up\n";
 			removeUserFromVector(sender_fd);
 			ft_print_users();
 		} else
 			perror("recv");
 		close(clientSockets[indexFd].fd);
 		del_from_pollfds(clientSockets[indexFd].fd);
-
 	} else {
 		// We got some good data from a client
 		cmdParse.parse(_buf);
@@ -250,7 +219,8 @@ void	Server::ExistingConnection(int indexFd) {
 }
 
 void	Server::run() {
-	for(;;) {
+	while (1)
+	{
 		int	status = poll(&clientSockets[0], _fdCount, -1);
 		checkStatusAndThrow(status, POL_ERR);
 

@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 14:10:46 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/03/28 13:37:03 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/03/28 18:04:06 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,5 +33,4 @@ std::string	Users::getUserName(void) const {
 
 void	Users::setNick(std::string nick) {
 	user_nick = nick;
-	
 }

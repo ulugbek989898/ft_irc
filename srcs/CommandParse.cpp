@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/25 08:50:12 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/03/28 13:18:53 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/03/29 08:39:57 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ void	CommandParse::parsePass(std::string str, std::string password) throw(std::r
 		throw std::runtime_error(ERR_NEEDMOREPARAMS);
 	}
 
-	printf("pass =%s\n", passwordArr[1].c_str());
 	if (passwordArr[0] == "PASS")
 	{
 		if (password == passwordArr[1]) {
@@ -107,6 +106,11 @@ std::string	CommandParse::parseNick(std::string nickMsg, std::vector<Users>	_Use
 
 	if (nickArr[0] == "NICK")
 	{
+		if ((nickArr[1].length() > 10))
+		{
+			nickArr.clear();
+			throw std::runtime_error("try give nick length no more than 10");
+		}
 		if (checkNickExist(_User, nickArr[1])) {
 			nickArr.clear();
 			throw std::runtime_error(nickArr[1] + ERR_NICKNAMEINUSE);
@@ -148,6 +152,10 @@ std::string	CommandParse::parseUsername(std::string userNameMsg) throw(std::runt
 		if (userNameArr[1].length() > 10) {
 			userNameArr.clear();
 			throw std::runtime_error("try give username length no more than 10");
+		}
+		else if (checkNickSyntax(userNameArr[1])) {
+			userNameArr.clear();
+			throw std::runtime_error(userNameArr[1] + ERR_ERRONEUSUSERNAME);
 		}
 		std::cout << "You can add this user to Users class" <<std::endl;
 	}
