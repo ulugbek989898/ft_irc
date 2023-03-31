@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   CommandParse.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
+/*   By: rrangwan <rrangwan@42abudhabi.ae>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/25 08:50:12 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/03/31 17:04:51 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/03/31 19:58:44 by rrangwan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,9 @@ void	CommandParse::parsePass(std::string str, std::string password) throw(std::r
 	std::stringstream	ss(str);
 	std::string			word;
 	int					counter = 0;
-	
+
+	this->_password = password;
+
 	while (ss >> word) {
 		passwordArr.push_back(word);
 		counter++;
@@ -43,6 +45,7 @@ void	CommandParse::parsePass(std::string str, std::string password) throw(std::r
 	{
 		if (password == passwordArr[1]) {
 			std::cout << "password correct" <<std::endl;
+
 		}
 		else {
 			passwordArr.clear();
@@ -100,7 +103,7 @@ void	CommandParse::parseNick(std::string nickMsg, std::vector<Users>	_User, int 
 	std::string			word;
 	int					counter = 0;
 	(void)fd;
-	
+
 	while (ss >> word && counter != 2) {
 		nickArr.push_back(word);
 		counter++;
@@ -145,7 +148,7 @@ void	CommandParse::parseUsername(std::string userNameMsg, std::vector<Users> Use
 		userNameArr.push_back(word);
 		counter++;
 	}
-	
+
 	if (counter != 5) {
 		userNameArr.clear();
 		std::string tmpUsername = getPreUsernameWithFd(Users, fd);
@@ -177,4 +180,53 @@ void	CommandParse::parseUsername(std::string userNameMsg, std::vector<Users> Use
 	}
 	pre_username = userNameArr[1];
 	userNameArr.clear();
+}
+
+void	CommandParse::parseOPER(std::string str, std::vector<Users>	_User, int fd, std::string password) throw(std::runtime_error) {
+	std::stringstream	ss(str);
+	std::string			word;
+	int					counter = 0;
+
+	passwordArrTemp.clear();
+
+	while (ss >> word) {
+		passwordArrTemp.push_back(word);
+		counter++;
+	}
+	if (counter != 3) {
+		passwordArrTemp.clear();
+		throw std::runtime_error("Not enough parameters");
+	}
+//std::cout << "password arra" <<passwordArrTemp[0] << std::endl;
+	if (passwordArrTemp[0] == "OPER")
+	{
+		if (password == passwordArrTemp[2]) {
+			std::cout << "password to make oper correct" <<std::endl;
+		}
+		else {
+			passwordArrTemp.clear();
+			throw std::runtime_error(ERR_PASSWDMISMATCH);
+		}
+	}
+	else {
+		passwordArrTemp.clear();
+		throw std::runtime_error(CMD_PASS_ERR);
+	}
+
+
+	passwordArrTemp.clear();
+
+	std::vector<Users>::iterator it = _User.begin();
+	while (it != _User.end())
+	{
+		if (it->getUserFd() == fd) {
+			it->setOPER(true);
+			std::cout << it->getUserNick()<<" made operator" <<std::endl;
+			break ;
+		}
+		++it;
+	}
+
+
+
 }

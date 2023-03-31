@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerUtils.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
+/*   By: rrangwan <rrangwan@42abudhabi.ae>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/29 09:08:07 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/03/31 09:57:13 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/03/31 19:41:49 by rrangwan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ void	Server::ft_parse(int newUserFd, std::string cmd) throw(std::runtime_error) 
 			cmdParse.parseNick(_buf, _Users, newUserFd);
 		else if (cmd == "USER")
 			cmdParse.parseUsername(_buf, _Users, newUserFd);
+		else if (cmd == "OPER")
+			cmdParse.parseOPER(_buf, _Users, newUserFd, _password);
 	}
 }
 

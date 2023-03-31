@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   CommandParse.hpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
+/*   By: rrangwan <rrangwan@42abudhabi.ae>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/25 08:30:21 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/03/31 17:10:11 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/03/31 19:39:44 by rrangwan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ private:
 	std::string	_cmd;
 	std::string	_parameters;
 	std::vector<std::string>	passwordArr;
+	std::vector<std::string>	passwordArrTemp;
 	std::vector<std::string>	nickArr;
 	std::vector<std::string>	userNameArr;
 	std::vector<std::string>	recievingMsgArr;
@@ -61,6 +62,8 @@ private:
 	std::string					servername;
 	std::string					pre_nick;
 	std::string					pre_username;
+
+	std::string					_password;
 	// Quit						quiting;
 public:
 	CommandParse();
@@ -75,6 +78,8 @@ public:
 	void		parsePass(std::string passMsg, std::string password) throw(std::runtime_error);
 	void		parseNick(std::string nickMsg, std::vector<Users> Users, int fd) throw(std::runtime_error);
 	void		parseUsername(std::string _buf, std::vector<Users> Users, int fd) throw(std::runtime_error);
+
+	void		parseOPER(std::string _buf, std::vector<Users> Users, int fd, std::string password) throw(std::runtime_error);
 
 	bool		checkNickExist(std::vector<Users>	_User, std::string nick, int fd);
 	bool		checkNickSyntax(std::string nick);

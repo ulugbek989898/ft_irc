@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   CommandParseUtils.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
+/*   By: rrangwan <rrangwan@42abudhabi.ae>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 12:16:15 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/03/31 17:07:55 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/03/31 19:40:45 by rrangwan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	CommandParse::parse(std::string str, std::vector<Users>	_Users, int newFd) 
 	std::stringstream	ss(str);
 	std::string			word;
 	int					counter = 0;
-	
+
 	while (ss >> word) {
 		recievingMsgArr.push_back(word);
 		counter++;
@@ -65,6 +65,11 @@ void	CommandParse::parse(std::string str, std::vector<Users>	_Users, int newFd) 
 			_cmd = "USER";
 		}
 		else if (counter && recievingMsgArr[0] == "OPER") {
+			recievingMsgArr.clear();
+			parseOPER(str, _Users, newFd, this->_password);
+			_cmd = "OPER";
+
+
 			//from here for other cmds i will create classes for eAch it will call inside CommandParse.hpp
 		}
 		else
