@@ -1,6 +1,7 @@
 #ifndef SERVER_HPP
 # define SERVER_HPP
 
+#define SERVER_NAME "localhost"
 #define LISTEN_ERR "error getting listening socket\n"
 #define POL_ERR "Error: poll()"
 #define FCNTL_ERR "Error: fcntl()"
@@ -53,8 +54,7 @@ private:
 	std::vector<struct pollfd>	clientSockets;
 	std::vector<Users>			_Users;
 	// nick and user is pre new User vars, when push_back() new user then set this vars and clear it;
-	std::string					pre_nick;
-	std::string					pre_username;
+	
 	CommandParse				cmdParse;
 
 public:
@@ -75,8 +75,13 @@ public:
 	bool			requestFromServerToAuthonticate(int newUserFd);
 	void			ft_parse(int fd, std::string cmd) throw(std::runtime_error);
 	void			ft_print_users() const;
-	void			ft_show_usage(int fd) throw(std::runtime_error);
+	void			ft_show_auth_usage(int fd) throw(std::runtime_error);
+	void			showGeneralGuide(int fd) throw(std::runtime_error);
 	void			removeUserFromVector(int fd);
+	void			updateNickFromVector(int fd, std::string new_nick);
+
+	std::string		getNickFromUsers(int fd) const;
+
 	~Server();
 };
 

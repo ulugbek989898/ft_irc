@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/25 08:50:12 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/03/29 08:39:57 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/03/31 15:02:30 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,15 @@
 
 CommandParse::CommandParse(/* args */)
 {
+	servername = SERVER_NAME;
+}
+
+std::string	CommandParse::getServerName() {
+	return servername;
 }
 
 CommandParse::~CommandParse()
 {
-}
-
-void	CommandParse::parse(std::string str) {
-	std::cout << "msg: " << str << std::endl;
-	
 }
 
 void	CommandParse::parsePass(std::string str, std::string password) throw(std::runtime_error) {
@@ -34,10 +34,9 @@ void	CommandParse::parsePass(std::string str, std::string password) throw(std::r
 		passwordArr.push_back(word);
 		counter++;
 	}
-	
 	if (counter != 2) {
 		passwordArr.clear();
-		throw std::runtime_error(ERR_NEEDMOREPARAMS);
+		throw std::runtime_error("Not enough parameters");
 	}
 
 	if (passwordArr[0] == "PASS")
@@ -58,10 +57,18 @@ void	CommandParse::parsePass(std::string str, std::string password) throw(std::r
 }
 
 
-bool	CommandParse::checkNickExist(std::vector<Users>	_User, std::string nick) {
-	for (size_t i = 0; i < _User.size(); i++) {
-		if (_User[i].getUserNick() == nick)
-			return true;
+bool	CommandParse::checkNickExist(std::vector<Users>	_User, std::string nick, int fd) {
+	if (fd == 0) {
+		for (size_t i = 0; i < _User.size(); i++) {
+			if (_User[i].getUserNick() == nick)
+				return true;
+		}
+	}
+	else {
+		for (size_t i = 0; i < _User.size(); i++) {
+			if (_User[i].getUserFd() == fd)
+				return true;
+		}
 	}
 	return false;
 }
@@ -88,22 +95,20 @@ bool	CommandParse::checkNickSyntax(std::string nick) {
 	return false;
 }
 
-std::string	CommandParse::parseNick(std::string nickMsg, std::vector<Users>	_User) throw(std::runtime_error) {
+void	CommandParse::parseNick(std::string nickMsg, std::vector<Users>	_User, int fd) throw(std::runtime_error) {
 	std::stringstream	ss(nickMsg);
 	std::string			word;
 	int					counter = 0;
-	std::string			ret_nick;
+	(void)fd;
 	
-	while (ss >> word) {
+	while (ss >> word && counter != 2) {
 		nickArr.push_back(word);
 		counter++;
 	}
-	
 	if (counter != 2) {
 		nickArr.clear();
-		throw std::runtime_error(ERR_NEEDMOREPARAMS);
+		throw std::runtime_error("ERR_NEEDMOREPARAMS\n");
 	}
-
 	if (nickArr[0] == "NICK")
 	{
 		if ((nickArr[1].length() > 10))
@@ -111,32 +116,31 @@ std::string	CommandParse::parseNick(std::string nickMsg, std::vector<Users>	_Use
 			nickArr.clear();
 			throw std::runtime_error("try give nick length no more than 10");
 		}
-		if (checkNickExist(_User, nickArr[1])) {
+		if (checkNickExist(_User, nickArr[1], 0)) {
 			nickArr.clear();
-			throw std::runtime_error(nickArr[1] + ERR_NICKNAMEINUSE);
+			throw std::runtime_error(nickArr[1] + ERR_NICKNAMEINUSE(getServerName(), getPreNickWithFd(_User, fd)));
+		}
+		else if (nickArr[1] == ":"){
+			nickArr.clear();
+			throw std::runtime_error(ERR_NONICKNAMEGIVEN(getServerName(), getPreNickWithFd(_User, fd)));
 		}
 		else if (checkNickSyntax(nickArr[1])) {
 			nickArr.clear();
 			throw std::runtime_error(nickArr[1] + ERR_ERRONEUSNICKNAME);
 		}
-		else
-			std::cout << "You can add this nick to Users class" <<std::endl;
 	}
 	else {
 		nickArr.clear();
 		throw std::runtime_error(RAND_ERR);
 	}
-	ret_nick = nickArr[1];
+	pre_nick = nickArr[1];
 	nickArr.clear();
-	return (ret_nick);
 }
 
-std::string	CommandParse::parseUsername(std::string userNameMsg) throw(std::runtime_error) {
+void	CommandParse::parseUsername(std::string userNameMsg, std::vector<Users> Users, int fd) throw(std::runtime_error) {
 	std::stringstream	ss(userNameMsg);
 	std::string			word;
 	int					counter = 0;
-	std::string			ret_user;
-	
 	while (ss >> word) {
 		userNameArr.push_back(word);
 		counter++;
@@ -144,11 +148,20 @@ std::string	CommandParse::parseUsername(std::string userNameMsg) throw(std::runt
 	
 	if (counter != 5) {
 		userNameArr.clear();
-		throw std::runtime_error(ERR_NEEDMOREPARAMS);
+		std::string tmpUsername = getPreUsernameWithFd(Users, fd);
+		if (tmpUsername.empty())
+			throw std::runtime_error(ERR_NEEDMOREPARAMS(getServerName(), pre_nick));
+		else
+			throw std::runtime_error(ERR_NEEDMOREPARAMS(getServerName(), getPreUsernameWithFd(Users, fd)));
 	}
 
 	if (userNameArr[0] == "USER")
 	{
+		std::string tmpUsername = getPreUsernameWithFd(Users, fd);
+		if (!tmpUsername.empty()) {
+			userNameArr.clear();
+			throw std::runtime_error(ERR_ALREADYREGISTERED(getServerName(), pre_username));
+		}
 		if (userNameArr[1].length() > 10) {
 			userNameArr.clear();
 			throw std::runtime_error("try give username length no more than 10");
@@ -157,13 +170,11 @@ std::string	CommandParse::parseUsername(std::string userNameMsg) throw(std::runt
 			userNameArr.clear();
 			throw std::runtime_error(userNameArr[1] + ERR_ERRONEUSUSERNAME);
 		}
-		std::cout << "You can add this user to Users class" <<std::endl;
 	}
 	else {
 		userNameArr.clear();
 		throw std::runtime_error(RAND_ERR);
 	}
-	ret_user = userNameArr[1];
+	pre_username = userNameArr[1];
 	userNameArr.clear();
-	return (ret_user);
 }

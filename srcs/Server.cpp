@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 07:05:48 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/03/29 10:17:44 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/03/31 11:40:13 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,18 +110,17 @@ std::string		Server::getPassword() const {
 void Server::add_to_pollfds()
 {
 	clientSockets.push_back(createPollStruct(_newFd, POLLIN));
-	_Users.push_back(Users(_newFd, pre_nick, pre_username));
+	_Users.push_back(Users(_newFd, cmdParse.getPreNick(), cmdParse.getPreUsername()));
 	_fdCount++;
 	ft_print_users();
 }
 
 void *Server::get_in_addr(struct sockaddr *sa)
 {
-    if (sa->sa_family == AF_INET) {
-        return &(((struct sockaddr_in*)sa)->sin_addr);
-    }
-
-    return &(((struct sockaddr_in6*)sa)->sin6_addr);
+	if (sa->sa_family == AF_INET) {
+		return &(((struct sockaddr_in*)sa)->sin_addr);
+	}
+	return &(((struct sockaddr_in6*)sa)->sin6_addr);
 }
 
 void	Server::del_from_pollfds(int fd){
@@ -145,23 +144,25 @@ void	Server::makeFdNonBlock(int fd) throw(std::runtime_error){
 bool	Server::requestFromServerToAuthonticate(int newUserFd) {
 	int 		status;
 	std::string msg;
-	msg = PURPLE;
+	// msg = PURPLE;
 
 	try
 	{
-		ft_show_usage(newUserFd);
+		ft_show_auth_usage(newUserFd);
 
 		ft_parse(newUserFd, "PASS");
 		ft_parse(newUserFd, "NICK");
 		ft_parse(newUserFd, "USER");
 		
-		msg += "Congrats, succesfully registered\r\n";
+		msg = "001 " + cmdParse.getPreNick() + " :Welcome to the Internet Relay Network " + cmdParse.getPreNick() + "\r\n";
 		status = send(newUserFd, msg.c_str(), msg.length(), 0);
 		checkStatusAndThrow(status, SEND_ERR);
 	}
 	catch(const std::exception& e)
 	{
-		std::cerr << e.what() << '\n';
+		msg = e.what();
+		msg += "\r\n";
+		status = send(newUserFd, msg.c_str(), msg.length(), 0);
 		close(newUserFd);
 		return false;
 	}
@@ -180,11 +181,14 @@ void	Server::NewConnection(void) {
 		makeFdNonBlock(_newFd);
 		add_to_pollfds();
 		std::cout << "Server: new connection, newFd = " << _newFd << std::endl;
-		}
+		showGeneralGuide(_newFd);
 	}
+}
 
 void	Server::ExistingConnection(int indexFd) {
 		// If not the listener, we're just a regular client
+	std::string	msg;
+
 	memset(&_buf, 0, sizeof(_buf));
 	int nbytes = recv(clientSockets[indexFd].fd, _buf, sizeof(_buf), 0);
 
@@ -201,9 +205,18 @@ void	Server::ExistingConnection(int indexFd) {
 			perror("recv");
 		close(clientSockets[indexFd].fd);
 		del_from_pollfds(clientSockets[indexFd].fd);
-	} else {
+	} else 
+	{
 		// We got some good data from a client
-		cmdParse.parse(_buf);
+		cmdParse.parse(_buf, _Users, clientSockets[indexFd].fd);
+		if (cmdParse.getCmd() == "NICK")
+		{
+			msg = ":" + getNickFromUsers(clientSockets[indexFd].fd) + "!~" + cmdParse.getPreUsername() + "@localhost NICK :" + cmdParse.getPreNick() + "\r\n";
+			int status = send(clientSockets[indexFd].fd, msg.c_str(), msg.length(), 0);
+			checkStatusAndThrow(status, SEND_ERR);
+			updateNickFromVector(clientSockets[indexFd].fd, cmdParse.getPreNick());
+			ft_print_users();
+		}
 		for(int j = 0; j < _fdCount; j++) {
 			// Send to everyone!
 			int dest_fd = clientSockets[j].fd;
@@ -228,7 +241,6 @@ void	Server::run() {
 		for(int i = 0; i < _fdCount; i++) {
 			// Check if someone's ready to read
 			if (clientSockets[i].revents & POLLIN) { // We got one!!
-				std::cout << "Hello new client" << std::endl;
 				if (clientSockets[i].fd == _listener)
 					NewConnection();
 				else
@@ -248,6 +260,18 @@ void	Server::removeUserFromVector(int fd) {
 	{
 		if (it->getUserFd() == fd) {
 			_Users.erase(it);
+			break ;
+		}
+		++it;
+	}
+}
+
+void	Server::updateNickFromVector(int fd, std::string new_nick) {
+	std::vector<Users>::iterator it = _Users.begin();
+	while (it != _Users.end())
+	{
+		if (it->getUserFd() == fd) {
+			it->setNick(new_nick);
 			break ;
 		}
 		++it;

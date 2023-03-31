@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/29 09:08:07 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/03/29 09:17:14 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/03/31 09:57:13 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,16 @@ void	Server::ft_parse(int newUserFd, std::string cmd) throw(std::runtime_error) 
 		if (cmd == "PASS")
 			cmdParse.parsePass(_buf, _password);
 		else if (cmd == "NICK")
-			pre_nick = cmdParse.parseNick(_buf, _Users);
+			cmdParse.parseNick(_buf, _Users, newUserFd);
 		else if (cmd == "USER")
-			pre_username = cmdParse.parseUsername(_buf);
+			cmdParse.parseUsername(_buf, _Users, newUserFd);
 	}
+}
+
+std::string		Server::getNickFromUsers(int fd) const {
+	for (size_t i = 0; i < _Users.size(); i++) {
+		if (_Users[i].getUserFd() == fd)
+			return _Users[i].getUserNick();
+	}
+	return NULL;
 }
