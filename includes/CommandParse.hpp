@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/25 08:30:21 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/03/31 12:12:59 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/03/31 17:10:11 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@
 // #include "Server.hpp" // Include the Server header file
 #define SERVER_NAME "localhost"
 
-#define ERR_NEEDMOREPARAMS(servername, nickname) \
-(":" + servername + " 461 * " + nickname + " " + " :Not enough parameters\n")
+#define ERR_NEEDMOREPARAMS(servername, client, command) \
+(":" + servername + " 461 * " + client + " " + command + " :Not enough parameters\n")
 
 #define ERR_ALREADYREGISTERED(servername, nickname) \
 (":" + servername + " 461 * " + nickname + " " + " :You may not reregister\n")
@@ -33,10 +33,13 @@
 #define ERR_NICKNAMEINUSE(servername, nickname) \
 (":" + servername + " 433 " + nickname + " " + " :Nickname is already in use\r\n")
 
+#define ERR_ERRONEUSNICKNAME(servername, nickname) \
+(":" + servername + " 432 " + nickname + " " + " :Erroneus nickname\r\n")
+
+
 # define ERR_PASSWDMISMATCH ":Password incorrect\r\n"
 # define CMD_PASS_ERR "Typing PASS invalid or check your password\r\n"
 // # define ERR_NICKNAMEINUSE " :Nickname is already in use\r\n"
-# define ERR_ERRONEUSNICKNAME "Erroneus nickname\r\n"
 # define RAND_ERR "As second input it must 'NICK nickname\r\n'"
 # define ERR_ERRONEUSUSERNAME "Erroneus nickname\r\n"
 
@@ -58,6 +61,7 @@ private:
 	std::string					servername;
 	std::string					pre_nick;
 	std::string					pre_username;
+	// Quit						quiting;
 public:
 	CommandParse();
 	~CommandParse();

@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/25 08:50:12 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/03/31 15:02:30 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/03/31 17:04:51 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ bool	CommandParse::checkNickExist(std::vector<Users>	_User, std::string nick, in
 }
 
 bool	CommandParse::checkSymbol(char c) {
-	std::string symbols = "-[]`^{}\'";
+	std::string symbols = "-[]`^{}\\";
 	for (size_t i = 0; i < symbols.length(); i++) {
 		if (c == symbols[i])
 			return true;
@@ -126,7 +126,7 @@ void	CommandParse::parseNick(std::string nickMsg, std::vector<Users>	_User, int 
 		}
 		else if (checkNickSyntax(nickArr[1])) {
 			nickArr.clear();
-			throw std::runtime_error(nickArr[1] + ERR_ERRONEUSNICKNAME);
+			throw std::runtime_error(ERR_ERRONEUSNICKNAME(getServerName(), getPreNickWithFd(_User, fd)));
 		}
 	}
 	else {
@@ -150,9 +150,9 @@ void	CommandParse::parseUsername(std::string userNameMsg, std::vector<Users> Use
 		userNameArr.clear();
 		std::string tmpUsername = getPreUsernameWithFd(Users, fd);
 		if (tmpUsername.empty())
-			throw std::runtime_error(ERR_NEEDMOREPARAMS(getServerName(), pre_nick));
+			throw std::runtime_error(ERR_NEEDMOREPARAMS(getServerName(), "empty", "USER"));
 		else
-			throw std::runtime_error(ERR_NEEDMOREPARAMS(getServerName(), getPreUsernameWithFd(Users, fd)));
+			throw std::runtime_error(ERR_NEEDMOREPARAMS(getServerName(), getPreUsernameWithFd(Users, fd), "USER"));
 	}
 
 	if (userNameArr[0] == "USER")
