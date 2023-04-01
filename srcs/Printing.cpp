@@ -6,15 +6,15 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 15:21:31 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/03/30 11:18:30 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/01 16:32:40 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/Server.hpp"
 
 void	Server::ft_print_users() const {
-	std::cout << GREEN << "/* ************************************ */\n";
-	std::cout << "/* Fds           Nick        Username   */\n";
+	std::cout << GREEN << "/* ******************************************** */\n";
+	std::cout << "/* Fds           Nick        Username   Operator*/\n";
 	for (size_t i = 0; i < _Users.size(); i++) {
 		std::cout << YELLOW << "/* ";
 		std::cout << std::left << std::setfill(' ') << std::setw(14);
@@ -23,9 +23,14 @@ void	Server::ft_print_users() const {
 		std::cout << _Users[i].getUserNick();
 		std::cout << std::left << std::setfill(' ') << std::setw(11);
 		std::cout << _Users[i].getUserName();
+		std::cout << std::left << std::setfill(' ') << std::setw(11);
+		if (_Users[i].getUserOPER())
+			std::cout << "true";
+		else
+			std::cout << "false";
 		std::cout << "*/" << std::endl;
 	}
-	std::cout << GREEN << "/* ************************************ */\n";
+	std::cout << GREEN << "/* ******************************************** */\n";
 }
 
 void	Server::ft_show_auth_usage(int fd) throw(std::runtime_error) {

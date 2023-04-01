@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 07:05:48 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/03/31 11:40:13 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/01 21:11:37 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,8 +205,7 @@ void	Server::ExistingConnection(int indexFd) {
 			perror("recv");
 		close(clientSockets[indexFd].fd);
 		del_from_pollfds(clientSockets[indexFd].fd);
-	} else 
-	{
+	} else {
 		// We got some good data from a client
 		cmdParse.parse(_buf, _Users, clientSockets[indexFd].fd);
 		if (cmdParse.getCmd() == "NICK")
@@ -216,6 +215,10 @@ void	Server::ExistingConnection(int indexFd) {
 			checkStatusAndThrow(status, SEND_ERR);
 			updateNickFromVector(clientSockets[indexFd].fd, cmdParse.getPreNick());
 			ft_print_users();
+		}
+		else if (cmdParse.getCmd() == "OPER")
+		{
+			this->setIsOperWithFd(cmdParse.getIsOper(), clientSockets[indexFd].fd);
 		}
 		for(int j = 0; j < _fdCount; j++) {
 			// Send to everyone!

@@ -81,6 +81,8 @@ public:
 	void			updateNickFromVector(int fd, std::string new_nick);
 
 	std::string		getNickFromUsers(int fd) const;
+	
+	void			setIsOperWithFd(bool val, int fd);
 
 	~Server();
 };

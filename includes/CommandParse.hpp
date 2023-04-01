@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   CommandParse.hpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rrangwan <rrangwan@42abudhabi.ae>          +#+  +:+       +#+        */
+/*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/25 08:30:21 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/03/31 19:39:44 by rrangwan         ###   ########.fr       */
+/*   Updated: 2023/04/01 17:09:37 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,11 @@
 #define ERR_ERRONEUSNICKNAME(servername, nickname) \
 (":" + servername + " 432 " + nickname + " " + " :Erroneus nickname\r\n")
 
+#define ERR_NOOPERHOST(servername, nickname) \
+(":" + servername + " 491 " + nickname + " :Invalid oper credentials\r\n")
+
+#define RPL_YOUREOPER(servername, nickname) \
+(":" + servername + " 381 " + nickname + " :You are now an IRC operator\r\n")
 
 # define ERR_PASSWDMISMATCH ":Password incorrect\r\n"
 # define CMD_PASS_ERR "Typing PASS invalid or check your password\r\n"
@@ -64,6 +69,7 @@ private:
 	std::string					pre_username;
 
 	std::string					_password;
+	bool						isOper;
 	// Quit						quiting;
 public:
 	CommandParse();
@@ -80,10 +86,11 @@ public:
 	void		parseUsername(std::string _buf, std::vector<Users> Users, int fd) throw(std::runtime_error);
 
 	void		parseOPER(std::string _buf, std::vector<Users> Users, int fd, std::string password) throw(std::runtime_error);
-
 	bool		checkNickExist(std::vector<Users>	_User, std::string nick, int fd);
 	bool		checkNickSyntax(std::string nick);
 	bool		checkSymbol(char c);
+	bool		getIsOper() const;
+	void		setIsOper(bool val);
 
 };
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerUtils.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rrangwan <rrangwan@42abudhabi.ae>          +#+  +:+       +#+        */
+/*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/29 09:08:07 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/03/31 19:41:49 by rrangwan         ###   ########.fr       */
+/*   Updated: 2023/04/01 17:08:25 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,4 +41,12 @@ std::string		Server::getNickFromUsers(int fd) const {
 			return _Users[i].getUserNick();
 	}
 	return NULL;
+}
+
+void	Server::setIsOperWithFd(bool val, int fd) {
+	for (size_t i = 0; i < _Users.size(); i++)
+	{
+		if (fd == _Users[i].getUserFd())
+			_Users[i].setOPER(val);
+	}
 }
