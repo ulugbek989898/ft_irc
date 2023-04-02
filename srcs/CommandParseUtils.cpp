@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 12:16:15 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/02 12:23:48 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/02 15:02:23 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,10 @@ void	CommandParse::parse(std::string str, std::vector<Users>	_Users, int newFd) 
 		else if (counter && recievingMsgArr[0] == "KILL") {
 			cmdKILL.parseKill(str, _Users, newFd);
 			_cmd = "KILL";
+		}
+		else if (counter && recievingMsgArr[0] == "QUIT") {
+			cmdQUIT.parseQuit(str, _Users, newFd);
+			_cmd = "QUIT";
 		}
 		else
 			_cmd = "";

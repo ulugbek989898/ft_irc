@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 06:34:09 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/02 13:23:12 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/02 15:01:17 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,9 @@
 
 #define RPL_KILL(servername, nickname, comment) \
 (":" + servername + " 1 " + " KILL " + nickname + " :KILL from operator " + "(" + comment +")\n")
+
+#define ERROR(servername, nickname, comment) \
+("ERROR :Closing link: (~" + nickname + "@" + servername + ") " + "[Quit " + comment +"]\r\n")
 
 #define RPL_PRIVMSG(sender, recipient, message) \
 (":" + sender + " PRIVMSG " + recipient + " " + message + "\n")

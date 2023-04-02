@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 07:05:48 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/02 14:19:38 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/02 15:03:27 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -228,7 +228,12 @@ void	Server::ExistingConnection(int indexFd) {
 			del_from_pollfds(cmdParse.getFdFromUsers(cmdParse.getNickWithIndex(1), _Users));
 			removeUserFromVector(cmdParse.getFdFromUsers(cmdParse.getNickWithIndex(1), _Users));
 			ft_print_users();
-			
+		}
+		else if (cmdParse.getCmd() == "QUIT") {
+			close (cmdParse.getFdFromUsers(cmdParse.getNickWithIndex(1), _Users));
+			del_from_pollfds(cmdParse.getFdFromUsers(cmdParse.getNickWithIndex(1), _Users));
+			removeUserFromVector(cmdParse.getFdFromUsers(cmdParse.getNickWithIndex(1), _Users));
+			ft_print_users();
 		}
 		for(int j = 0; j < _fdCount; j++) {
 			// Send to everyone!
