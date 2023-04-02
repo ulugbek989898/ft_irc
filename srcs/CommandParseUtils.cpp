@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 12:16:15 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/01 17:04:54 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/02 12:23:48 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ void	CommandParse::parse(std::string str, std::vector<Users>	_Users, int newFd) 
 	std::string			word;
 	int					counter = 0;
 
+	recievingMsgArr.clear();
 	while (ss >> word) {
 		recievingMsgArr.push_back(word);
 		counter++;
@@ -69,11 +70,12 @@ void	CommandParse::parse(std::string str, std::vector<Users>	_Users, int newFd) 
 			parseOPER(str, _Users, newFd, this->_password);
 			_cmd = "OPER";
 		}
-		else
-		{
-			_cmd = "";
+		else if (counter && recievingMsgArr[0] == "KILL") {
+			cmdKILL.parseKill(str, _Users, newFd);
+			_cmd = "KILL";
 		}
-		recievingMsgArr.clear();
+		else
+			_cmd = "";
 	}
 	catch(const std::exception& e)
 	{

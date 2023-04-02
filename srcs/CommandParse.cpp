@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/25 08:50:12 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/01 17:10:45 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/02 08:29:23 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,19 @@ bool	CommandParse::checkNickSyntax(std::string nick) {
 bool	CommandParse::getIsOper() const {
 	return isOper;
 }
-	void	CommandParse::setIsOper(bool val) {
-		isOper = val;
+
+void	CommandParse::setIsOper(bool val) {
+	isOper = val;
+}
+
+int		CommandParse::getFdFromUsers(std::string nick, std::vector<Users> _Users) const {
+	for (size_t i = 0; i < _Users.size(); i++) {
+		if (_Users[i].getUserNick() == nick)
+			return _Users[i].getUserFd();
 	}
+	return 0;
+}
+
+std::string		CommandParse::getNickWithIndex(int index) const {
+	return recievingMsgArr[index];
+}

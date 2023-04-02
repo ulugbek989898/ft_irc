@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/25 08:30:21 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/01 17:09:37 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/02 08:28:43 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,35 +21,10 @@
 #include <vector>
 #include <stdexcept>
 #include "Users.hpp"
+#include "KILL.hpp"
+#include "Reply.hpp"
 // #include "Server.hpp" // Include the Server header file
-#define SERVER_NAME "localhost"
 
-#define ERR_NEEDMOREPARAMS(servername, client, command) \
-(":" + servername + " 461 * " + client + " " + command + " :Not enough parameters\n")
-
-#define ERR_ALREADYREGISTERED(servername, nickname) \
-(":" + servername + " 461 * " + nickname + " " + " :You may not reregister\n")
-
-#define ERR_NICKNAMEINUSE(servername, nickname) \
-(":" + servername + " 433 " + nickname + " " + " :Nickname is already in use\r\n")
-
-#define ERR_ERRONEUSNICKNAME(servername, nickname) \
-(":" + servername + " 432 " + nickname + " " + " :Erroneus nickname\r\n")
-
-#define ERR_NOOPERHOST(servername, nickname) \
-(":" + servername + " 491 " + nickname + " :Invalid oper credentials\r\n")
-
-#define RPL_YOUREOPER(servername, nickname) \
-(":" + servername + " 381 " + nickname + " :You are now an IRC operator\r\n")
-
-# define ERR_PASSWDMISMATCH ":Password incorrect\r\n"
-# define CMD_PASS_ERR "Typing PASS invalid or check your password\r\n"
-// # define ERR_NICKNAMEINUSE " :Nickname is already in use\r\n"
-# define RAND_ERR "As second input it must 'NICK nickname\r\n'"
-# define ERR_ERRONEUSUSERNAME "Erroneus nickname\r\n"
-
-#define ERR_NONICKNAMEGIVEN(servername, nickname) \
-(":" + servername + " 431 " + nickname + " :No nickname given\n")
 
 class Users;
 
@@ -70,12 +45,13 @@ private:
 
 	std::string					_password;
 	bool						isOper;
-	// Quit						quiting;
+	KILL						cmdKILL;
 public:
 	CommandParse();
 	~CommandParse();
 	std::string		getPreNick();
 	std::string		getPreNickWithFd(std::vector<Users>	_Users, int fd);
+	bool			getIsOperWithFd(std::vector<Users>	_Users, int fd);
 	std::string		getPreUsername();
 	std::string		getPreUsernameWithFd(std::vector<Users>	_Users, int fd);
 	std::string		getServerName();
@@ -91,6 +67,8 @@ public:
 	bool		checkSymbol(char c);
 	bool		getIsOper() const;
 	void		setIsOper(bool val);
+	int			getFdFromUsers(std::string nick, std::vector<Users>	_User) const;
+	std::string	getNickWithIndex(int index) const;
 
 };
 

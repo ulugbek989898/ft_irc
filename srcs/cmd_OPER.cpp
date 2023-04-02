@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 14:21:13 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/01 17:04:48 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/01 21:33:56 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ void	CommandParse::parseOPER(std::string str, std::vector<Users>	_User, int fd, 
 		if (it->getUserFd() == fd) {
 			// it->setOPER(true);
 			this->setIsOper(true);
-			std::cout << "result =" << it->getUserOPER() << "fd = " << fd << std::endl;
 			std::string msg = RPL_YOUREOPER(getServerName(), it->getUserNick());
 			int status = send(fd, msg.c_str(), msg.length(), 0);
 			if (status <= 0)

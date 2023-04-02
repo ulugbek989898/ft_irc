@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/29 09:08:07 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/01 17:08:25 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/02 08:21:05 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ std::string		Server::getNickFromUsers(int fd) const {
 		if (_Users[i].getUserFd() == fd)
 			return _Users[i].getUserNick();
 	}
-	return NULL;
+	return "";
 }
 
 void	Server::setIsOperWithFd(bool val, int fd) {
