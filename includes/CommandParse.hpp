@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/25 08:30:21 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/02 14:31:48 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/02 16:19:43 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 #include "Users.hpp"
 #include "KILL.hpp"
 #include "QUIT.hpp"
+#include "SQUIT.hpp"
 #include "Reply.hpp"
 // #include "Server.hpp" // Include the Server header file
 
@@ -48,6 +49,7 @@ private:
 	bool						isOper;
 	KILL						cmdKILL;
 	QUIT						cmdQUIT;
+	SQUIT						cmdSQUIT;
 public:
 	CommandParse();
 	~CommandParse();

@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 07:05:48 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/02 15:03:27 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/03 07:41:29 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -235,6 +235,13 @@ void	Server::ExistingConnection(int indexFd) {
 			removeUserFromVector(cmdParse.getFdFromUsers(cmdParse.getNickWithIndex(1), _Users));
 			ft_print_users();
 		}
+		else if (cmdParse.getCmd() == "SQUIT") {
+			clientSockets.clear();
+			closeAllUserFds();
+			removeAllUsersFromVector();
+			ft_print_users();
+			exit(0);
+		}
 		for(int j = 0; j < _fdCount; j++) {
 			// Send to everyone!
 			int dest_fd = clientSockets[j].fd;
@@ -254,7 +261,6 @@ void	Server::run() {
 	{
 		int	status = poll(&clientSockets[0], _fdCount, -1);
 		checkStatusAndThrow(status, POL_ERR);
-
 		// Run through the existing connections looking for data to read
 		for(int i = 0; i < _fdCount; i++) {
 			// Check if someone's ready to read
@@ -284,6 +290,10 @@ void	Server::removeUserFromVector(int fd) {
 	}
 }
 
+void	Server::removeAllUsersFromVector() {
+	_Users.clear();
+}
+
 void	Server::updateNickFromVector(int fd, std::string new_nick) {
 	std::vector<Users>::iterator it = _Users.begin();
 	while (it != _Users.end())
@@ -294,4 +304,9 @@ void	Server::updateNickFromVector(int fd, std::string new_nick) {
 		}
 		++it;
 	}
+}
+
+void	Server::closeAllUserFds() {
+	for (size_t i = 0; i < _Users.size(); i++)
+		close(i + 5);
 }

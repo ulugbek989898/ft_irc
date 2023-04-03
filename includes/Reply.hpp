@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 06:34:09 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/02 15:01:17 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/03 06:35:19 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,9 @@
 
 #define ERR_NEEDMOREPARAMS(servername, client, command) \
 (":" + servername + " 461 * " + client + " " + command + " :Not enough parameters\n")
+
+#define ERR_NOSUCHSERVER(servername, client) \
+(": ERROR  :No such server " + servername + "\n")
 
 #define ERR_ALREADYREGISTERED(servername, nickname) \
 (":" + servername + " 461 * " + nickname + " " + " :You may not reregister\n")
@@ -50,6 +53,9 @@
 
 #define RPL_KILL(servername, nickname, comment) \
 (":" + servername + " 1 " + " KILL " + nickname + " :KILL from operator " + "(" + comment +")\n")
+
+#define RPL_SQUIT(servername, nickname, comment) \
+("ERROR :Closing link: " + servername + " (SERVER QUIT (" + comment + "))" "\n")
 
 #define ERROR(servername, nickname, comment) \
 ("ERROR :Closing link: (~" + nickname + "@" + servername + ") " + "[Quit " + comment +"]\r\n")

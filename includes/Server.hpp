@@ -78,6 +78,8 @@ public:
 	void			ft_show_auth_usage(int fd) throw(std::runtime_error);
 	void			showGeneralGuide(int fd) throw(std::runtime_error);
 	void			removeUserFromVector(int fd);
+	void			removeAllUsersFromVector();
+	void			closeAllUserFds();
 	void			updateNickFromVector(int fd, std::string new_nick);
 
 	std::string		getNickFromUsers(int fd) const;
