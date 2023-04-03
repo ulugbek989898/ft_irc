@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 12:16:15 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/02 16:21:17 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/03 11:47:48 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,9 @@ void	CommandParse::parse(std::string str, std::vector<Users>	_Users, int newFd) 
 			cmdSQUIT.parseSquit(str, _Users, newFd);
 			_cmd = "SQUIT";
 		}
+		// else if (counter && recievingMsgArr[0] == "JOIN") {
+		// 	cmdJOIN.
+		// }
 		else
 			_cmd = "";
 	}

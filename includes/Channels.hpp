@@ -1,41 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Users.hpp                                          :+:      :+:    :+:   */
+/*   Channels.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/26 14:09:22 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/03 08:13:52 by uisroilo         ###   ########.fr       */
+/*   Created: 2023/04/03 08:09:12 by uisroilo          #+#    #+#             */
+/*   Updated: 2023/04/03 11:49:03 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef USERS_HPP
-# define USERS_HPP
+#ifndef CHANNELS_HPP
+# define CHANNELS_HPP
 
 #include <iostream>
+#include <string>
+#include "Users.hpp"
 
-class Users
+class Channels
 {
 private:
-	int	user_fd;
-	std::string	user_nick;
-	std::string	username;
-
-	bool	isOPER;
-
+	std::string			ch_name;
+	
 public:
-	Users(int fd, std::string pre_nick, std::string pre_username);
-	std::string	getUserNick(void) const;
-	std::string	getUserName(void) const;
-	void		setNick(std::string nick);
-	void		setUsername(std::string nick);
-	int			getUserFd(void) const;
-
-	bool		getUserOPER(void) const;
-	void		setOPER(bool val);
-
-	~Users();
+	Channels(std::string name);
+	~Channels();
 };
 
 #endif

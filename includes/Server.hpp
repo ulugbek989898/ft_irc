@@ -27,6 +27,7 @@
 
 #include "CommandParse.hpp"
 #include "Users.hpp"
+#include "Channels.hpp"
 
 #define BLACK	"\033[0;30m"
 #define RED		"\033[0;31m"
@@ -53,6 +54,7 @@ private:
 	int							_fdCount;
 	std::vector<struct pollfd>	clientSockets;
 	std::vector<Users>			_Users;
+	// std::vector<Channels>			_Channels;
 	// nick and user is pre new User vars, when push_back() new user then set this vars and clear it;
 	
 	CommandParse				cmdParse;
