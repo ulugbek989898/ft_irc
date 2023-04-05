@@ -6,7 +6,7 @@
 /*   By: rrangwan <rrangwan@42abudhabi.ae>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 14:10:46 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/03/31 19:10:15 by rrangwan         ###   ########.fr       */
+/*   Updated: 2023/04/03 18:07:42 by rrangwan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,4 +44,34 @@ void	Users::setNick(std::string nick) {
 
 void	Users::setOPER(bool val) {
 	isOPER = val;
+}
+
+//false if not in channel yet
+bool		Users::IsinChannel(std::string ch_name)
+{
+	// std::vector<std::string>::iterator	it;
+
+	for(std::vector<std::string>::iterator	it = listChannels.begin(); it != listChannels.end(); it++)
+	{
+		if (*it == ch_name)
+			return true;
+	}
+	return false;
+}
+
+void		Users::addUsertoChannel(std::string ch_name)
+{
+	if(ch_name[0] == '#')
+	{
+		// std::vector<std::string>::iterator	it;
+
+		// for (it = listChannels.begin(); it != listChannels.end(); it++)
+		// {
+		// 	if(*it = fd)
+		// 		return ; //to avoid duplicate fds
+		// }
+		// //listUsers.push_back(fd);
+		listChannels.push_back(ch_name);
+
+	}
 }

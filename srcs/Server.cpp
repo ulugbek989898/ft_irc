@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
+/*   By: rrangwan <rrangwan@42abudhabi.ae>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 07:05:48 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/03 11:54:04 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/04 02:52:22 by rrangwan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,22 +26,22 @@ int	Server::get_listener_socket(void)
 	hints.ai_family = AF_UNSPEC;
 	hints.ai_socktype = SOCK_STREAM;
 	hints.ai_flags = AI_PASSIVE;
-	
+
 	std::stringstream	ss;
 	ss << _port;
 	std::string const str_port = ss.str();
-	
+
 	if ((rv = getaddrinfo(NULL, str_port.c_str(), &hints, &ai)) != 0) {
 		std::cout << "selectserver: " << gai_strerror(rv) << std::endl;
 		exit(1);
 	}
-		
+
 	for(p = ai; p != NULL; p = p->ai_next) {
 		listener = socket(p->ai_family, p->ai_socktype, p->ai_protocol);
-		if (listener < 0) { 
+		if (listener < 0) {
 			continue;
 		}
-		
+
 		// Lose the pesky "address already in use" error message
 		setsockopt(listener, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int));
 
@@ -93,14 +93,14 @@ Server::Server(int port, std::string password)
 {
 	_port = port;
 	_password = password;
-	
+
 	// Set up and get a listening socket
 	_listener = get_listener_socket();
 	checkStatusAndThrow(_listener, LISTEN_ERR);
 	std::cout << "server: waiting for connections...\n";
 	// Add the listener to set
 	setUpPoll();
-	
+
 }
 
 std::string		Server::getPassword() const {
@@ -153,7 +153,7 @@ bool	Server::requestFromServerToAuthonticate(int newUserFd) {
 		ft_parse(newUserFd, "PASS");
 		ft_parse(newUserFd, "NICK");
 		ft_parse(newUserFd, "USER");
-		
+
 		msg = "001 " + cmdParse.getPreNick() + " :Welcome to the Internet Relay Network " + cmdParse.getPreNick() + "\r\n";
 		status = send(newUserFd, msg.c_str(), msg.length(), 0);
 		checkStatusAndThrow(status, SEND_ERR);
@@ -242,6 +242,24 @@ void	Server::ExistingConnection(int indexFd) {
 			ft_print_users();
 			exit(0);
 		}
+		else if (cmdParse.getCmd() == "JOIN")
+		{
+			for (int i = 0; i < cmdParse.JOINgetSizeJoiners(); i++)
+			{
+				//std::cout << "test 1234 i = "<< i <<"size =  "<<  cmdParse.JOINgetSizeJoiners()<<"fd = "<< clientSockets[indexFd].fd<<" \n";
+			if (addNewChannelJOIN(cmdParse.JOINgetJoinName(i)))  //0 if fail 2 if already exist 1 if new created
+				{
+					if (addFDtoChannelJOIN(cmdParse.JOINgetJoinName(i), clientSockets[indexFd].fd))  //1 if added to channel (channel exits)
+					{
+						addChanneltoUSERJOIN(cmdParse.JOINgetJoinName(i),clientSockets[indexFd].fd);
+						ft_print_JOIN(cmdParse.JOINgetJoinName(i), clientSockets[indexFd].fd);
+					}
+
+				}
+			}
+
+		}
+
 		for(int j = 0; j < _fdCount; j++) {
 			// Send to everyone!
 			int dest_fd = clientSockets[j].fd;
@@ -309,4 +327,84 @@ void	Server::updateNickFromVector(int fd, std::string new_nick) {
 void	Server::closeAllUserFds() {
 	for (size_t i = 0; i < _Users.size(); i++)
 		close(i + 5);
+}
+
+
+int	Server::addNewChannelJOIN(std::string	str)
+{
+	if((this->_Channels.size()>= 10))
+	{
+		std::cout << "Max channels reached \n";
+		return 0;
+	}
+	if (str[0] != '#')
+	{
+		std::cout << "Channel name should start with # "<< str <<" \n";
+		return 0;
+	}
+
+	std::vector<Channels>::iterator	it;
+
+	for(it = _Channels.begin(); it != _Channels.end(); it++)
+	{
+		if(it->getName() == str)
+		{
+			std::cout << "Channel name already exists "<< str <<" \n";
+			return 2;
+		}
+	}
+
+	this->_Channels.push_back(Channels(str));
+	std::cout << "Channel name created "<< str <<" \n";
+	return 1;
+
+}
+
+	int			Server::addFDtoChannelJOIN(std::string str, int fd)
+	{
+		std::vector<Channels>::iterator	it;
+
+		for(it = _Channels.begin(); it != _Channels.end(); it++)
+		{
+			if(it->getName() == str)
+			{
+				it->addUsertolist(fd);
+				return 1;
+			}
+		}
+		return 0;
+	}
+
+	void			Server::addChanneltoUSERJOIN(std::string str, int fd)
+	{
+		std::vector<Users>::iterator	it;
+
+		for(it = _Users.begin(); it != _Users.end(); it++)
+		{
+			if(it->getUserFd() == fd)
+			{
+				if(!(it->IsinChannel(str)))
+					it->addUsertoChannel(str);
+				else
+					std::cout << "User "<<it->getUserNick()<<" already in Channel "<< str <<" \n";
+			}
+		}
+	}
+
+
+std::vector<int> 	Server::getUserinChanellJOIN(std::string str)
+{
+		std::vector<int> temp;
+
+		std::vector<Channels>::iterator	it;
+
+		for(it = _Channels.begin(); it <= _Channels.end(); it++)
+		{
+			if(it->getName() == str)
+			{
+				return (it->getALLlistUsers());
+
+			}
+		}
+		return temp;
 }

@@ -29,6 +29,8 @@
 #include "Users.hpp"
 #include "Channels.hpp"
 
+#include <cstring>
+
 #define BLACK	"\033[0;30m"
 #define RED		"\033[0;31m"
 #define GREEN	"\033[0;32m"
@@ -38,25 +40,26 @@
 #define CYAN	"\x1b[0;36m"
 #define WHITE	"\033[0;37m"
 
+#define MAX_CHANNELS 10
 
 class Server
 {
 private:
 	int							_port;
 	std::string					_password;
-	int							_listener;	// // Listening socket descriptor 
+	int							_listener;	// // Listening socket descriptor
 	int							_newFd;		// Newly accept()ed socket descriptor
 	struct	sockaddr_storage	_remoteaddr; // Client address
 	socklen_t					_addrlen;
 	char						_buf[512];    // Buffer for client data
 	// char						remoteIP[INET6_ADDRSTRLEN];
-	
-	int							_fdCount;
-	std::vector<struct pollfd>	clientSockets;
-	std::vector<Users>			_Users;
-	// std::vector<Channels>			_Channels;
+
+	int								_fdCount;
+	std::vector<struct pollfd>		clientSockets;
+	std::vector<Users>				_Users;
+	std::vector<Channels>			_Channels;
 	// nick and user is pre new User vars, when push_back() new user then set this vars and clear it;
-	
+
 	CommandParse				cmdParse;
 
 public:
@@ -85,8 +88,17 @@ public:
 	void			updateNickFromVector(int fd, std::string new_nick);
 
 	std::string		getNickFromUsers(int fd) const;
-	
+
 	void			setIsOperWithFd(bool val, int fd);
+
+	int				addNewChannelJOIN(std::string str);
+	int				addFDtoChannelJOIN(std::string str, int fd);
+	void			addChanneltoUSERJOIN(std::string str, int fd);
+
+	void			ft_print_JOIN(std::string ch_name, int fd);
+	std::vector<int> 	getUserinChanellJOIN(std::string str);
+
+
 
 	~Server();
 };

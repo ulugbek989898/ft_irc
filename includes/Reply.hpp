@@ -13,6 +13,9 @@
 #ifndef REPLY_HPP
 # define REPLY_HPP
 
+#include <cstring> //for linux
+#include <cstdio> //for linux
+
 #define SERVER_NAME "localhost"
 
 #define ERR_NEEDMOREPARAMS(servername, client, command) \
@@ -48,7 +51,7 @@
 #define ERR_NONICKNAMEGIVEN(servername, nickname) \
 (":" + servername + " 431 " + nickname + " :No nickname given\n")
 
-// #define RPL_KILL(operator, murderer, message) \
+// #define RPL_KILL(operator, murderer, message) 
 // (":" + operator + " Killed " + murderer + " " + message + "\n")
 
 #define RPL_KILL(servername, nickname, comment) \

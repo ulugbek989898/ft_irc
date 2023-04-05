@@ -3,21 +3,24 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+         #
+#    By: rrangwan <rrangwan@42abudhabi.ae>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/22 17:04:35 by uisroilo          #+#    #+#              #
-#    Updated: 2023/04/02 16:30:31 by uisroilo         ###   ########.fr        #
+#    Updated: 2023/04/03 18:31:19 by rrangwan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	=	ircserv
 CXX		=	c++
+
 CPPFLAGS	=	-std=c++98 -Wall -Wextra -Werror
+
 
 SRCS	=	main.cpp srcs/InitialParse.cpp srcs/Server.cpp srcs/CommandParse.cpp\
  			srcs/Users.cpp srcs/Printing.cpp srcs/ServerUtils.cpp srcs/CommandParseUtils.cpp\
 			srcs/cmd_NICK.cpp srcs/cmd_OPER.cpp srcs/cmd_PASS.cpp srcs/cmd_USER.cpp\
-			srcs/cmd_KILL.cpp srcs/cmd_QUIT.cpp srcs/cmd_SQUIT.cpp
+			srcs/cmd_KILL.cpp srcs/cmd_QUIT.cpp srcs/cmd_SQUIT.cpp srcs/cmd_JOIN.cpp\
+			srcs/Channels.cpp
 
 OBJ = $(SRCS:.cpp=.o)
 
