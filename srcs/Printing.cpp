@@ -3,14 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   Printing.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
+/*   By: rrangwan <rrangwan@42abudhabi.ae>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 15:21:31 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/01 16:32:40 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/03 22:08:32 by rrangwan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/Server.hpp"
+
+//to_string is after c++98 (can see in linux)
+//so created own
+
+	template <typename T>
+	std::string to_string (T n)
+	{
+		std::ostringstream	ss;
+		ss << n;
+		return (ss.str());
+	}
+
 
 void	Server::ft_print_users() const {
 	std::cout << GREEN << "/* ******************************************** */\n";
@@ -64,4 +76,29 @@ void	Server::ft_show_auth_usage(int fd) throw(std::runtime_error) {
 	msg += "001 " + cmdParse.getPreNick() + " /* ********************************************************************** */\r\n";
 	status = send(fd, msg.c_str(), msg.length(), 0);
 	checkStatusAndThrow(status, SEND_ERR);
+}
+
+void	Server::ft_print_JOIN(std::string ch_name, int fd) {
+
+	std::string	msg;
+	//int			status; (unsused IN LINUX)
+
+	msg += "Members in Channel: " + ch_name + "\n";
+	msg +=  "/* Fds           Nick         \n";
+	std::vector<int> temp;
+	temp = getUserinChanellJOIN(ch_name);
+	for (size_t i = 0; i < temp.size(); i++)
+	{
+		msg += to_string(temp[i]) + "            ";
+		msg += getNickFromUsers(temp[i]) + "\n";
+
+	}
+	//status = send(fd, msg.c_str(), msg.length(), 0);
+	// std::cout<<"test 1234 \n";
+	// if (msg.length() > 0)
+	// {
+		send(fd, msg.c_str(), msg.length(), 0);
+		// std::cout<<"test 1235 \n";
+	// }
+	//checkStatusAndThrow(status, SEND_ERR);
 }

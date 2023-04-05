@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   CommandParse.hpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
+/*   By: rrangwan <rrangwan@42abudhabi.ae>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/25 08:30:21 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/03 11:47:13 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/03 18:22:32 by rrangwan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 #include "QUIT.hpp"
 #include "SQUIT.hpp"
 #include "Reply.hpp"
+#include "JOIN.hpp"
 // #include "Server.hpp" // Include the Server header file
 
 
@@ -50,8 +51,9 @@ private:
 	KILL						cmdKILL;
 	QUIT						cmdQUIT;
 	SQUIT						cmdSQUIT;
-	
-	
+	JOIN						cmdJOIN;
+
+
 public:
 	CommandParse();
 	~CommandParse();
@@ -75,6 +77,12 @@ public:
 	void		setIsOper(bool val);
 	int			getFdFromUsers(std::string nick, std::vector<Users>	_User) const;
 	std::string	getNickWithIndex(int index) const;
+
+	//std::vector<Channels> 	getChannels(void);
+
+	int				JOINgetSizeJoiners();
+	std::string		JOINgetJoinName(int n);
+
 
 };
 

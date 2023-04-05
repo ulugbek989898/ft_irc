@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   CommandParse.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
+/*   By: rrangwan <rrangwan@42abudhabi.ae>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/25 08:50:12 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/02 08:29:23 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/04 02:46:36 by rrangwan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,4 +83,15 @@ int		CommandParse::getFdFromUsers(std::string nick, std::vector<Users> _Users) c
 
 std::string		CommandParse::getNickWithIndex(int index) const {
 	return recievingMsgArr[index];
+}
+
+
+int				CommandParse::JOINgetSizeJoiners()
+{
+	return cmdJOIN.getSizeJoiners();
+}
+
+std::string		CommandParse::JOINgetJoinName(int n)
+{
+	return cmdJOIN.getJoinName(n);
 }

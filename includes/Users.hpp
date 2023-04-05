@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Users.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
+/*   By: rrangwan <rrangwan@42abudhabi.ae>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 14:09:22 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/03 08:13:52 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/03 18:07:47 by rrangwan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 # define USERS_HPP
 
 #include <iostream>
+#include <vector>
+#include <string>
 
 class Users
 {
@@ -23,6 +25,8 @@ private:
 	std::string	username;
 
 	bool	isOPER;
+
+	std::vector<std::string>	listChannels;
 
 public:
 	Users(int fd, std::string pre_nick, std::string pre_username);
@@ -34,6 +38,9 @@ public:
 
 	bool		getUserOPER(void) const;
 	void		setOPER(bool val);
+
+	bool		IsinChannel(std::string ch_name);
+	void		addUsertoChannel(std::string ch_name);
 
 	~Users();
 };
