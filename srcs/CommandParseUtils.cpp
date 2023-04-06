@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 12:16:15 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/03 11:47:48 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/04 17:41:31 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,10 @@ std::string	CommandParse::getPreUsername() {
 
 std::string	CommandParse::getCmd() {
 	return _cmd;
+}
+
+JOIN	CommandParse::getJOIN() {
+	return cmdJOIN;
 }
 
 void	CommandParse::parse(std::string str, std::vector<Users>	_Users, int newFd) throw(std::runtime_error) {
@@ -81,6 +85,10 @@ void	CommandParse::parse(std::string str, std::vector<Users>	_Users, int newFd) 
 		else if (counter && recievingMsgArr[0] == "SQUIT") {
 			cmdSQUIT.parseSquit(str, _Users, newFd);
 			_cmd = "SQUIT";
+		}
+		else if (counter && recievingMsgArr[0] == "JOIN") {
+			cmdJOIN.parseJoin(str, _Users, newFd);
+			_cmd = "JOIN";
 		}
 		// else if (counter && recievingMsgArr[0] == "JOIN") {
 		// 	cmdJOIN.

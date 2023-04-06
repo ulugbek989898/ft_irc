@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 07:05:48 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/03 11:54:04 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/06 07:20:31 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,7 +174,7 @@ void	Server::NewConnection(void) {
 
 	_addrlen = sizeof(_remoteaddr);
 	_newFd = accept(_listener, (struct sockaddr *)&_remoteaddr, &_addrlen);
-
+	std::cout << "fddd = " << _newFd << std::endl;
 	if (_newFd == -1)
 		perror("accept");
 	else if (requestFromServerToAuthonticate(_newFd)) {
@@ -203,6 +203,7 @@ void	Server::ExistingConnection(int indexFd) {
 			ft_print_users();
 		} else
 			perror("recv");
+		std::cout << "fddd=" << clientSockets[indexFd].fd << std::endl;
 		close(clientSockets[indexFd].fd);
 		del_from_pollfds(clientSockets[indexFd].fd);
 	} else {
@@ -225,14 +226,14 @@ void	Server::ExistingConnection(int indexFd) {
 		{
 			//remove user from database also pollfd socket, using his nickname
 			close (cmdParse.getFdFromUsers(cmdParse.getNickWithIndex(1), _Users));
-			del_from_pollfds(cmdParse.getFdFromUsers(cmdParse.getNickWithIndex(1), _Users));
+			del_from_pollfds(sender_fd);
 			removeUserFromVector(cmdParse.getFdFromUsers(cmdParse.getNickWithIndex(1), _Users));
 			ft_print_users();
 		}
 		else if (cmdParse.getCmd() == "QUIT") {
-			close (cmdParse.getFdFromUsers(cmdParse.getNickWithIndex(1), _Users));
-			del_from_pollfds(cmdParse.getFdFromUsers(cmdParse.getNickWithIndex(1), _Users));
-			removeUserFromVector(cmdParse.getFdFromUsers(cmdParse.getNickWithIndex(1), _Users));
+			close (clientSockets[indexFd].fd);
+			del_from_pollfds(sender_fd);
+			removeUserFromVector(sender_fd);
 			ft_print_users();
 		}
 		else if (cmdParse.getCmd() == "SQUIT") {
@@ -242,16 +243,40 @@ void	Server::ExistingConnection(int indexFd) {
 			ft_print_users();
 			exit(0);
 		}
-		for(int j = 0; j < _fdCount; j++) {
-			// Send to everyone!
-			int dest_fd = clientSockets[j].fd;
-			// Except the listener and ourselves
-			if (dest_fd != _listener && dest_fd != sender_fd) {
-				if (send(dest_fd, _buf, nbytes, 0) == -1) {
-					perror("send");
+		else if (cmdParse.getCmd() == "JOIN") {
+			std::vector<std::string>	tmp = cmdParse.getJOIN().getChannelsArr();
+
+			for (size_t i = 0; i < tmp.size(); i++) {
+				if (!checkUserInChannel(tmp[i], clientSockets[indexFd].fd)) {
+					this->_Users[indexFd - 1].addChannel(tmp[i]);
+					if (checkChannelExistInChannelList(tmp[i])) {
+						for (size_t j = 0; i < this->_Channels.size(); j++) {
+							if (this->_Channels[j].getChannelName() == tmp[i]) {
+								this->_Channels[j].setUserFd(clientSockets[indexFd].fd);
+								break;
+							}
+						}
+					}
+					else
+						this->_Channels.push_back(Channels(tmp[i], clientSockets[indexFd].fd));
 				}
 			}
+			tmp.clear();
 		}
+		ft_print_users();
+		ft_print_Channels_Users();
+		std::cout << "index = " << indexFd << " fd " << clientSockets[indexFd].fd << "count =" << _fdCount<<  std::endl;
+		
+		// for(int j = 0; j < _fdCount; j++) {
+		// 	// Send to everyone!
+		// 	int dest_fd = clientSockets[j].fd;
+		// 	// Except the listener and ourselves
+		// 	if (dest_fd != _listener && dest_fd != sender_fd) {
+		// 		if (send(dest_fd, _buf, nbytes, 0) == -1) {
+		// 			perror("send");
+		// 		}
+		// 	}
+		// }
 	}
 
 }

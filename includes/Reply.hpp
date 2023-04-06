@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 06:34:09 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/03 06:35:19 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/05 09:42:28 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,13 @@
 
 #define ERROR(servername, nickname, comment) \
 ("ERROR :Closing link: (~" + nickname + "@" + servername + ") " + "[Quit " + comment +"]\r\n")
+
+#define ERR_BADCHANMASK(servername, nickname, wrongChannel) \
+(":" + servername + " 476 " + nickname + " " + wrongChannel + ":Invalid channel name\r\n")
+
+#define REP_CHAN_SUCCESS(servername, nickname, channel) \
+(":" + nickname + "!~" + nickname + "@" + servername + " JOIN :" + channel + "\r\n")
+
 
 #define RPL_PRIVMSG(sender, recipient, message) \
 (":" + sender + " PRIVMSG " + recipient + " " + message + "\n")

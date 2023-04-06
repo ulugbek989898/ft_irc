@@ -6,15 +6,15 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 15:21:31 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/01 16:32:40 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/05 14:47:21 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/Server.hpp"
 
 void	Server::ft_print_users() const {
-	std::cout << GREEN << "/* ******************************************** */\n";
-	std::cout << "/* Fds           Nick        Username   Operator*/\n";
+	std::cout << GREEN << "/* ********************************************************************** */\n";
+	std::cout << "/* Fds           Nick        Username   Operator   Channels                         */\n";
 	for (size_t i = 0; i < _Users.size(); i++) {
 		std::cout << YELLOW << "/* ";
 		std::cout << std::left << std::setfill(' ') << std::setw(14);
@@ -28,9 +28,26 @@ void	Server::ft_print_users() const {
 			std::cout << "true";
 		else
 			std::cout << "false";
+		
+		for (size_t j = 0; j < _Users[i].getChannelList().size(); j++) {
+			std::cout << _Users[i].getChannelList()[j] << ", ";
+		}
 		std::cout << "*/" << std::endl;
 	}
-	std::cout << GREEN << "/* ******************************************** */\n";
+	std::cout << GREEN << "/* ********************************************************************** */\n";
+}
+
+void	Server::ft_print_Channels_Users() {
+	std::cout << CYAN << "/* ********************************************************************** */\n";
+	std::cout << "Channels                          fd\'s\n";
+	for (size_t i = 0; i < this->_Channels.size(); i++) {
+		std::cout << PURPLE << "/* " << this->_Channels[i].getChannelName() << "                      ";
+		for (size_t j = 0; j < this->_Channels[i].getChannelUserFds().size(); j++) {
+			std::cout << this->_Channels[i].getChannelUserFds()[j] << ", ";
+		}
+		std::cout << "  */\n";
+	}
+	std::cout << CYAN << "/* ********************************************************************** */\n";
 }
 
 void	Server::ft_show_auth_usage(int fd) throw(std::runtime_error) {

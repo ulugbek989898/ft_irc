@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Users.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rrangwan <rrangwan@42abudhabi.ae>          +#+  +:+       +#+        */
+/*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 14:10:46 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/03/31 19:10:15 by rrangwan         ###   ########.fr       */
+/*   Updated: 2023/04/05 07:54:51 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,4 +44,12 @@ void	Users::setNick(std::string nick) {
 
 void	Users::setOPER(bool val) {
 	isOPER = val;
+}
+
+std::vector<std::string>	Users::getChannelList() const {
+	return ChannelList;
+}
+
+void	Users::addChannel(std::string str) {
+	this->ChannelList.push_back(str);
 }

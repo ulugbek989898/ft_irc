@@ -54,7 +54,7 @@ private:
 	int							_fdCount;
 	std::vector<struct pollfd>	clientSockets;
 	std::vector<Users>			_Users;
-	// std::vector<Channels>			_Channels;
+	std::vector<Channels>		_Channels;
 	// nick and user is pre new User vars, when push_back() new user then set this vars and clear it;
 	
 	CommandParse				cmdParse;
@@ -77,6 +77,7 @@ public:
 	bool			requestFromServerToAuthonticate(int newUserFd);
 	void			ft_parse(int fd, std::string cmd) throw(std::runtime_error);
 	void			ft_print_users() const;
+	void			ft_print_Channels_Users();
 	void			ft_show_auth_usage(int fd) throw(std::runtime_error);
 	void			showGeneralGuide(int fd) throw(std::runtime_error);
 	void			removeUserFromVector(int fd);
@@ -87,6 +88,9 @@ public:
 	std::string		getNickFromUsers(int fd) const;
 	
 	void			setIsOperWithFd(bool val, int fd);
+
+	bool			checkUserInChannel(std::string chan, int fd);
+	bool			checkChannelExistInChannelList(std::string chan);
 
 	~Server();
 };

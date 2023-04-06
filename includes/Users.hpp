@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 14:09:22 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/03 08:13:52 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/05 07:55:02 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define USERS_HPP
 
 #include <iostream>
+#include <vector>
 
 class Users
 {
@@ -23,6 +24,7 @@ private:
 	std::string	username;
 
 	bool	isOPER;
+	std::vector<std::string>	ChannelList;
 
 public:
 	Users(int fd, std::string pre_nick, std::string pre_username);
@@ -34,6 +36,8 @@ public:
 
 	bool		getUserOPER(void) const;
 	void		setOPER(bool val);
+	std::vector<std::string>	getChannelList() const;
+	void		addChannel(std::string str);
 
 	~Users();
 };
