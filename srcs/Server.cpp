@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 07:05:48 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/06 07:20:31 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/06 08:02:39 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -263,6 +263,7 @@ void	Server::ExistingConnection(int indexFd) {
 			}
 			tmp.clear();
 		}
+		
 		ft_print_users();
 		ft_print_Channels_Users();
 		std::cout << "index = " << indexFd << " fd " << clientSockets[indexFd].fd << "count =" << _fdCount<<  std::endl;

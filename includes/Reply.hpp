@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 06:34:09 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/05 09:42:28 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/06 08:01:47 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,9 @@
 
 #define ERR_NOSUCHSERVER(servername, client) \
 (": ERROR  :No such server " + servername + "\n")
+
+#define ERR_NOSUCHNICK(servername, nick, client) \
+(":" + servername + " 401 * " + nick + " " + client + " :No such nick\n")
 
 #define ERR_ALREADYREGISTERED(servername, nickname) \
 (":" + servername + " 461 * " + nickname + " " + " :You may not reregister\n")

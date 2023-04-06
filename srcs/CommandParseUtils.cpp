@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 12:16:15 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/04 17:41:31 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/06 08:03:00 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,9 +90,10 @@ void	CommandParse::parse(std::string str, std::vector<Users>	_Users, int newFd) 
 			cmdJOIN.parseJoin(str, _Users, newFd);
 			_cmd = "JOIN";
 		}
-		// else if (counter && recievingMsgArr[0] == "JOIN") {
-		// 	cmdJOIN.
-		// }
+		else if (counter && recievingMsgArr[0] == "PRIVMSG") {
+			cmdPRIVMSG.parsePrivmsg(str, _Users, newFd);
+			_cmd = "PRIVMSG";
+		}
 		else
 			_cmd = "";
 	}
