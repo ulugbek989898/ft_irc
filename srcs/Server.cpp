@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 07:05:48 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/06 08:02:39 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/06 15:35:13 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,12 +203,11 @@ void	Server::ExistingConnection(int indexFd) {
 			ft_print_users();
 		} else
 			perror("recv");
-		std::cout << "fddd=" << clientSockets[indexFd].fd << std::endl;
 		close(clientSockets[indexFd].fd);
 		del_from_pollfds(clientSockets[indexFd].fd);
 	} else {
 		// We got some good data from a client
-		cmdParse.parse(_buf, _Users, clientSockets[indexFd].fd);
+		cmdParse.parse(_buf, _Users, _Channels, clientSockets[indexFd].fd);
 		if (cmdParse.getCmd() == "NICK")
 		{
 			msg = ":" + getNickFromUsers(clientSockets[indexFd].fd) + "!~" + cmdParse.getPreUsername() + "@localhost NICK :" + cmdParse.getPreNick() + "\r\n";

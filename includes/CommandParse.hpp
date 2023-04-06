@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/25 08:30:21 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/06 08:03:55 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/06 14:41:05 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 #include "Reply.hpp"
 #include "JOIN.hpp"
 #include "PRIVMSG.hpp"
+#include "Channels.hpp"
 
 
 class Users;
@@ -64,7 +65,7 @@ public:
 	std::string		getPreUsernameWithFd(std::vector<Users>	_Users, int fd);
 	std::string		getServerName();
 	std::string		getCmd();
-	void		parse(std::string recieved_msg, std::vector<Users>	_User, int newFd) throw(std::runtime_error);
+	void		parse(std::string recieved_msg, std::vector<Users>	_User, std::vector<Channels> _Channels, int newFd) throw(std::runtime_error);
 	void		parsePass(std::string passMsg, std::string password) throw(std::runtime_error);
 	void		parseNick(std::string nickMsg, std::vector<Users> Users, int fd) throw(std::runtime_error);
 	void		parseUsername(std::string _buf, std::vector<Users> Users, int fd) throw(std::runtime_error);

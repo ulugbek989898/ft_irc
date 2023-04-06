@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 06:34:09 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/06 08:01:47 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/06 16:51:57 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,13 @@
 (": ERROR  :No such server " + servername + "\n")
 
 #define ERR_NOSUCHNICK(servername, nick, client) \
-(":" + servername + " 401 * " + nick + " " + client + " :No such nick\n")
+(":" + servername + " 401 " + nick + " " + client + " :No such nick\n")
+
+#define ERR_NOSUCHCHANNEL(servername, nick, channel) \
+(":" + servername + " 403 " + nick + " " + channel + " :No such channel\n")
+
+#define PRIVMSG_REP(servername, nick, channelOrUser, msg) \
+(":" + nick + "!~" + nick + "@" + servername + " PRIVMSG " + channelOrUser + " :" + msg + "\n")
 
 #define ERR_ALREADYREGISTERED(servername, nickname) \
 (":" + servername + " 461 * " + nickname + " " + " :You may not reregister\n")

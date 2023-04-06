@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 12:16:15 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/06 08:03:00 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/06 14:45:04 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,11 @@ JOIN	CommandParse::getJOIN() {
 	return cmdJOIN;
 }
 
-void	CommandParse::parse(std::string str, std::vector<Users>	_Users, int newFd) throw(std::runtime_error) {
+void	CommandParse::parse(std::string str, std::vector<Users>	_Users, std::vector<Channels> _Channels, int newFd) throw(std::runtime_error) {
 	std::stringstream	ss(str);
 	std::string			word;
 	int					counter = 0;
+
 
 	recievingMsgArr.clear();
 	while (ss >> word) {
@@ -91,7 +92,7 @@ void	CommandParse::parse(std::string str, std::vector<Users>	_Users, int newFd) 
 			_cmd = "JOIN";
 		}
 		else if (counter && recievingMsgArr[0] == "PRIVMSG") {
-			cmdPRIVMSG.parsePrivmsg(str, _Users, newFd);
+			cmdPRIVMSG.parsePrivmsg(str, _Users, _Channels, newFd);
 			_cmd = "PRIVMSG";
 		}
 		else
