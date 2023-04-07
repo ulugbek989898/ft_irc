@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 06:34:09 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/06 16:51:57 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/07 10:24:26 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,9 @@
 
 #define ERR_NEEDMOREPARAMS(servername, client, command) \
 (":" + servername + " 461 * " + client + " " + command + " :Not enough parameters\n")
+
+#define ERR_UNKNOWNCOMMAND(servername, command) \
+(":" + servername + " 421 * " + command + ": Unknown command\n")
 
 #define ERR_NOSUCHSERVER(servername, client) \
 (": ERROR  :No such server " + servername + "\n")

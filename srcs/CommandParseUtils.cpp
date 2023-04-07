@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 12:16:15 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/06 14:45:04 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/07 10:32:31 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,8 +95,13 @@ void	CommandParse::parse(std::string str, std::vector<Users>	_Users, std::vector
 			cmdPRIVMSG.parsePrivmsg(str, _Users, _Channels, newFd);
 			_cmd = "PRIVMSG";
 		}
-		else
+		else {
 			_cmd = "";
+			std::string msg = ERR_UNKNOWNCOMMAND(getServerName(), recievingMsgArr[0]);
+			int status = send(newFd, msg.c_str(), msg.length(), 0);
+			if (status <= 0)
+				throw std::runtime_error("SEND_ERR");
+		}
 	}
 	catch(const std::exception& e)
 	{

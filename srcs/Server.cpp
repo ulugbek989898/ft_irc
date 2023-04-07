@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 07:05:48 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/06 15:35:13 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/07 09:02:14 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -224,12 +224,33 @@ void	Server::ExistingConnection(int indexFd) {
 		else if (cmdParse.getCmd() == "KILL")
 		{
 			//remove user from database also pollfd socket, using his nickname
+			int	tmp_Fd = cmdParse.getFdFromUsers(cmdParse.getNickWithIndex(1), _Users);
+			for (size_t i = 0; i < _Users.size(); i++) {
+				if (_Users[i].getUserFd() == tmp_Fd) {
+					for (size_t k = 0; k < _Users[i].getChannelList().size(); k++) {
+						for (size_t j = 0; j < this->_Channels.size(); j++) {
+							if (this->_Channels[j].getChannelName() == _Users[i].getChannelList()[k]) {
+								this->_Channels[j].removeUserFd(tmp_Fd);
+								break;
+							}
+						}
+					}
+				}
+			}
 			close (cmdParse.getFdFromUsers(cmdParse.getNickWithIndex(1), _Users));
 			del_from_pollfds(sender_fd);
 			removeUserFromVector(cmdParse.getFdFromUsers(cmdParse.getNickWithIndex(1), _Users));
 			ft_print_users();
 		}
 		else if (cmdParse.getCmd() == "QUIT") {
+			for (size_t k = 0; k < _Users[indexFd - 1].getChannelList().size(); k++) {
+				for (size_t j = 0; j < this->_Channels.size(); j++) {
+					if (this->_Channels[j].getChannelName() == _Users[indexFd - 1].getChannelList()[k]) {
+						this->_Channels[j].removeUserFd(clientSockets[indexFd].fd);
+						break;
+					}
+				}
+			}
 			close (clientSockets[indexFd].fd);
 			del_from_pollfds(sender_fd);
 			removeUserFromVector(sender_fd);
@@ -249,7 +270,7 @@ void	Server::ExistingConnection(int indexFd) {
 				if (!checkUserInChannel(tmp[i], clientSockets[indexFd].fd)) {
 					this->_Users[indexFd - 1].addChannel(tmp[i]);
 					if (checkChannelExistInChannelList(tmp[i])) {
-						for (size_t j = 0; i < this->_Channels.size(); j++) {
+						for (size_t j = 0; j < this->_Channels.size(); j++) {
 							if (this->_Channels[j].getChannelName() == tmp[i]) {
 								this->_Channels[j].setUserFd(clientSockets[indexFd].fd);
 								break;
@@ -265,18 +286,6 @@ void	Server::ExistingConnection(int indexFd) {
 		
 		ft_print_users();
 		ft_print_Channels_Users();
-		std::cout << "index = " << indexFd << " fd " << clientSockets[indexFd].fd << "count =" << _fdCount<<  std::endl;
-		
-		// for(int j = 0; j < _fdCount; j++) {
-		// 	// Send to everyone!
-		// 	int dest_fd = clientSockets[j].fd;
-		// 	// Except the listener and ourselves
-		// 	if (dest_fd != _listener && dest_fd != sender_fd) {
-		// 		if (send(dest_fd, _buf, nbytes, 0) == -1) {
-		// 			perror("send");
-		// 		}
-		// 	}
-		// }
 	}
 
 }

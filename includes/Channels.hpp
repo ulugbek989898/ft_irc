@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 08:09:12 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/05 09:03:10 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/07 08:19:06 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,9 @@ private:
 public:
 	Channels(std::string name, int fd);
 	void	setUserFd(int fd);
+	void	removeUserFd(int fd);
 	std::string	getChannelName() const;
-	std::vector<int>	getChannelUserFds() const;
+	std::vector<int>	getChannelUserFds();
 	~Channels();
 };
 

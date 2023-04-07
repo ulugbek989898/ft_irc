@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 08:12:22 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/06 06:54:15 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/07 08:23:16 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,20 @@ void	Channels::setUserFd(int fd) {
 	this->userFds.push_back(fd);
 }
 
+void	Channels::removeUserFd(int fd) {
+	for (std::vector<int>::iterator it = userFds.begin(); it!= userFds.end(); it++)
+	{
+		if (fd == *it) {
+			userFds.erase(it);
+			break ;
+		}
+	}
+}
+
 std::string	Channels::getChannelName() const {
 	return this->ch_name;
 }
 
-std::vector<int>	Channels::getChannelUserFds() const {
+std::vector<int>	Channels::getChannelUserFds() {
 	return this->userFds;
 }
