@@ -92,7 +92,7 @@ void	PRIVMSG::parsePrivmsg(std::string str, std::vector<Users> _Users, std::vect
 	std::string			word;
 	int					counter = 0;
 
-	_servername = servername;
+	servername = _servername;
 	privmsgCmdArr.clear();
 	msgSend = "";
 

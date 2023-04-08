@@ -11,7 +11,8 @@
 /* ************************************************************************** */
 
 #include "../includes/CommandParse.hpp"
-void	CommandParse::parseOPER(std::string str, std::vector<Users>	_User, int fd, std::string password) throw(std::runtime_error) {
+//void	CommandParse::parseOPER(std::string str, std::vector<Users>	_User, int fd, std::string password) throw(std::runtime_error) {
+void	CommandParse::parseOPER(std::string str, std::vector<Users>	_User, int fd, std::string password)  {
 	std::stringstream	ss(str);
 	std::string			word;
 	int					counter = 0;

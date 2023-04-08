@@ -102,6 +102,7 @@ void	Server::setUpPoll(){
 
 Server::Server(int port, std::string password)
 {
+	stopServer = false;
 	_port = port;
 	_password = password;
 	
@@ -237,6 +238,7 @@ void	Server::ExistingConnection(int indexFd) {
 		}
 		// std::cout << "we are=" << getUserBufferWithFd(_Users, sender_fd);
 		cmdParse.parse(str, _Users, _Channels, clientSockets[indexFd].fd, this->_servername);
+		str.clear();
 		if (cmdParse.getCmd() == "NICK")
 		{
 			msg = ":" + getNickFromUsers(clientSockets[indexFd].fd) + "!~" + cmdParse.getPreUsername() + "@localhost NICK :" + cmdParse.getPreNick() + "\r\n";
@@ -267,7 +269,7 @@ void	Server::ExistingConnection(int indexFd) {
 				}
 			}
 			close (cmdParse.getFdFromUsers(cmdParse.getNickWithIndex(1), _Users));
-			del_from_pollfds(sender_fd);
+			del_from_pollfds(cmdParse.getFdFromUsers(cmdParse.getNickWithIndex(1), _Users));
 			removeUserFromVector(cmdParse.getFdFromUsers(cmdParse.getNickWithIndex(1), _Users));
 			ft_print_users();
 		}
@@ -282,16 +284,29 @@ void	Server::ExistingConnection(int indexFd) {
 			}
 			close (clientSockets[indexFd].fd);
 			del_from_pollfds(sender_fd);
-			removeUserFromVector(sender_fd);
+			//removeUserFromVector(sender_fd);
+	//		for (std::vector<struct pollfd>::iterator it = clientSockets.begin(); it != clientSockets.end(); it++) {
+	//	close(it->fd);
+	//}
 			ft_print_users();
 		}
-		else if (cmdParse.getCmd() == "SQUIT") {
+	/*	else if (cmdParse.getCmd() == "SQUIT") 
+		{
+			
+			//closeAllUserFds();
+			for (std::vector<struct pollfd>::reverse_iterator it = clientSockets.rbegin(); it != clientSockets.rend(); ++it) {
+		close(it->fd);
+	}
 			clientSockets.clear();
-			closeAllUserFds();
-			removeAllUsersFromVector();
+			//removeAllUsersFromVector();
+			//_Users.clear();
+			for (std::vector<Users>::iterator i = _Users.begin(); i != _Users.end(); i++) {
+				_Users.erase(i);
+				}
+			_Users.clear();
 			ft_print_users();
 			exit(0);
-		}
+		}*/
 		else if (cmdParse.getCmd() == "JOIN") {
 			std::vector<std::string>	tmp = cmdParse.getJOIN().getChannelsArr();
 
@@ -335,6 +350,7 @@ void	Server::run() {
 			}
 		}
 	}
+	//this->~Server();
 }
 
 Server::~Server()
@@ -375,5 +391,5 @@ void	Server::updateNickFromVector(int fd, std::string new_nick) {
 
 void	Server::closeAllUserFds() {
 	for (size_t i = 0; i < _Users.size(); i++)
-		close(i + 5);
+		close(i + 3);
 }

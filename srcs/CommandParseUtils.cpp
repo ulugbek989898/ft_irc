@@ -76,30 +76,37 @@ void	CommandParse::parse(std::string str, std::vector<Users>	_Users, std::vector
 			_cmd = "OPER";
 		}
 		else if (counter && recievingMsgArr[0] == "KILL") {
+			recievingMsgArr.clear();
 			cmdKILL.parseKill(str, _Users, newFd);
 			_cmd = "KILL";
 		}
 		else if (counter && recievingMsgArr[0] == "QUIT") {
+			recievingMsgArr.clear();
 			cmdQUIT.parseQuit(str, _Users, newFd, _servername);
 			_cmd = "QUIT";
 		}
 		else if (counter && recievingMsgArr[0] == "SQUIT") {
+			recievingMsgArr.clear();
 			cmdSQUIT.parseSquit(str, _Users, newFd, _servername);
 			_cmd = "SQUIT";
 		}
 		else if (counter && recievingMsgArr[0] == "JOIN") {
+			recievingMsgArr.clear();
 			cmdJOIN.parseJoin(str, _Users, newFd, _servername);
 			_cmd = "JOIN";
 		}
 		else if (counter && recievingMsgArr[0] == "PRIVMSG") {
+			recievingMsgArr.clear();
 			cmdPRIVMSG.parsePrivmsg(str, _Users, _Channels, newFd, _servername);
 			_cmd = "PRIVMSG";
 		}
 		else if (counter && recievingMsgArr[0] == "NOTICE") {
+			recievingMsgArr.clear();
 			cmdNOTICE.parseNoticeMsg(str, _Users, _Channels, newFd, _servername);
 			_cmd = "PRIVMSG";
 		}
 		else {
+			recievingMsgArr.clear();
 			_cmd = "";
 			// std::string msg = ERR_UNKNOWNCOMMAND(getServerName(), recievingMsgArr[0]);
 			// int status = send(newFd, msg.c_str(), msg.length(), 0);

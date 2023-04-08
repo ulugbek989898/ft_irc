@@ -40,6 +40,7 @@ int	main(int argc, char **argv) {
 	}
 	catch(const std::exception& e)
 	{
+		//close(4);
 		std::cerr << e.what() << '\n';
 		return 1;
 	}

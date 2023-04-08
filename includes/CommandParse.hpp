@@ -72,7 +72,7 @@ public:
 	void		parseNick(std::string nickMsg, std::vector<Users> Users, int fd) throw(std::runtime_error);
 	void		parseUsername(std::string _buf, std::vector<Users> Users, int fd) throw(std::runtime_error);
 
-	void		parseOPER(std::string _buf, std::vector<Users> Users, int fd, std::string password) throw(std::runtime_error);
+	void		parseOPER(std::string _buf, std::vector<Users> Users, int fd, std::string password) ;
 	bool		checkNickExist(std::vector<Users>	_User, std::string nick, int fd);
 	bool		checkNickSyntax(std::string nick);
 	bool		checkSymbol(char c);

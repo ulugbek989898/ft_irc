@@ -12,7 +12,7 @@
 
 NAME	=	ircserv
 CXX		=	c++
-CPPFLAGS	=	-std=c++98 -Wall -Wextra -Werror
+CPPFLAGS	=	-std=c++98 -Wall -Wextra -Werror -g
 
 SRCS	=	main.cpp srcs/InitialParse.cpp srcs/Server.cpp srcs/CommandParse.cpp\
  			srcs/Users.cpp srcs/Printing.cpp srcs/ServerUtils.cpp srcs/CommandParseUtils.cpp\
