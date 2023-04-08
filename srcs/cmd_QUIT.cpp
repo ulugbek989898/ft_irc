@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   QUIT.cpp                                           :+:      :+:    :+:   */
+/*   cmd_QUIT.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 14:30:27 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/02 14:54:01 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/08 07:05:05 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 QUIT::QUIT(/* args */)
 {
-	servername = SERVER_NAME;
+	// servername = SERVER_NAME;
 }
 
 std::string		QUIT::getServername() {
@@ -34,13 +34,13 @@ std::string	QUIT::getPreNickWithFd(std::vector<Users>	_Users, int fd) {
 	return "";
 }
 
-void	QUIT::parseQuit(std::string str, std::vector<Users>	_User, int fd) throw(std::runtime_error) {
+void	QUIT::parseQuit(std::string str, std::vector<Users>	_User, int fd, std::string _servername) throw(std::runtime_error) {
 	std::stringstream	ss(str);
 	std::string			word;
 	int					counter = 0;
 
+	servername = _servername;
 	quitCmdArr.clear();
-
 	while (ss >> word) {
 		quitCmdArr.push_back(word);
 		counter++;
@@ -65,7 +65,7 @@ void	QUIT::parseQuit(std::string str, std::vector<Users>	_User, int fd) throw(st
 	for (size_t i = 0; i < _User.size(); i++) {
 		if (_User[i].getUserFd() == fd) {
 			if (send(fd, buffer, tmp.length() , 0) == -1) {
-				perror("send");
+				std::cout << "send error\n";
 			}
 		}
 	}

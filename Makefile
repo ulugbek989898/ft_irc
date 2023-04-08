@@ -6,7 +6,7 @@
 #    By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/22 17:04:35 by uisroilo          #+#    #+#              #
-#    Updated: 2023/04/06 08:00:54 by uisroilo         ###   ########.fr        #
+#    Updated: 2023/04/07 14:21:49 by uisroilo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ SRCS	=	main.cpp srcs/InitialParse.cpp srcs/Server.cpp srcs/CommandParse.cpp\
  			srcs/Users.cpp srcs/Printing.cpp srcs/ServerUtils.cpp srcs/CommandParseUtils.cpp\
 			srcs/cmd_NICK.cpp srcs/cmd_OPER.cpp srcs/cmd_PASS.cpp srcs/cmd_USER.cpp\
 			srcs/cmd_KILL.cpp srcs/cmd_QUIT.cpp srcs/cmd_SQUIT.cpp srcs/cmd_JOIN.cpp\
-			srcs/Channels.cpp srcs/cmd_PRIVMSG.cpp
+			srcs/Channels.cpp srcs/cmd_PRIVMSG.cpp srcs/cmd_NOTICE.cpp
 
 OBJ = $(SRCS:.cpp=.o)
 

@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   PRIVMSG.hpp                                        :+:      :+:    :+:   */
+/*   NOTICE.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/03 12:25:17 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/08 07:11:28 by uisroilo         ###   ########.fr       */
+/*   Created: 2023/04/07 14:11:21 by uisroilo          #+#    #+#             */
+/*   Updated: 2023/04/08 07:12:03 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PRIVMSG_HPP
-# define PRIVMSG_HPP
+#ifndef NOTICE_HPP
+# define NOTICE_HPP
 
 #include <string>
 #include <iostream>
@@ -25,7 +25,7 @@
 #include <sys/socket.h>
 
 
-class PRIVMSG
+class NOTICE
 {
 private:
 	std::string					servername;
@@ -37,10 +37,10 @@ private:
 
 	// char						buffer[256];
 public:
-	PRIVMSG(/* args */);
-	~PRIVMSG();
+	NOTICE(/* args */);
+	~NOTICE();
 	std::string			getServername();
-	void				parsePrivmsg(std::string str, std::vector<Users> _Users, std::vector<Channels> _Channels, int newFd, std::string _servername) throw(std::runtime_error);
+	void				parseNoticeMsg(std::string str, std::vector<Users> _Users, std::vector<Channels> _Channels, int newFd, std::string _servername) throw(std::runtime_error);
 	void				adv_tokenizer(std::string s, char del);
 	bool				checkNickExist(std::vector<Users>	_User, std::string nick);
 	bool				checkChannelExist(std::vector<Channels>	_Channels, std::string nick);

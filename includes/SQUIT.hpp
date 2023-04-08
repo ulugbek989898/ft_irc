@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 16:18:50 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/02 17:42:32 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/07 16:23:01 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 #include "Users.hpp"
 #include <string>
+#include <cstring>
 #include <iostream>
 #include<unistd.h>
 #include <sstream>
@@ -32,7 +33,7 @@ private:
 public:
 	SQUIT(/* args */);
 	~SQUIT();
-	void		parseSquit(std::string str, std::vector<Users>	_User, int fd) throw(std::runtime_error);
+	void		parseSquit(std::string str, std::vector<Users>	_User, int fd, std::string _servername) throw(std::runtime_error);
 	std::string	getServerName();
 	std::string	getPreNickWithFd(std::vector<Users>	_Users, int fd);
 	bool		getIsOperWithFd(std::vector<Users>	_Users, int fd);

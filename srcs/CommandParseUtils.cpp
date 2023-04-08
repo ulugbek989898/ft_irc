@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 12:16:15 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/07 10:32:31 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/08 07:11:40 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,12 +46,12 @@ JOIN	CommandParse::getJOIN() {
 	return cmdJOIN;
 }
 
-void	CommandParse::parse(std::string str, std::vector<Users>	_Users, std::vector<Channels> _Channels, int newFd) throw(std::runtime_error) {
+void	CommandParse::parse(std::string str, std::vector<Users>	_Users, std::vector<Channels> _Channels, int newFd, std::string _servername) throw(std::runtime_error) {
 	std::stringstream	ss(str);
 	std::string			word;
 	int					counter = 0;
 
-
+	servername = _servername;
 	recievingMsgArr.clear();
 	while (ss >> word) {
 		recievingMsgArr.push_back(word);
@@ -80,19 +80,23 @@ void	CommandParse::parse(std::string str, std::vector<Users>	_Users, std::vector
 			_cmd = "KILL";
 		}
 		else if (counter && recievingMsgArr[0] == "QUIT") {
-			cmdQUIT.parseQuit(str, _Users, newFd);
+			cmdQUIT.parseQuit(str, _Users, newFd, _servername);
 			_cmd = "QUIT";
 		}
 		else if (counter && recievingMsgArr[0] == "SQUIT") {
-			cmdSQUIT.parseSquit(str, _Users, newFd);
+			cmdSQUIT.parseSquit(str, _Users, newFd, _servername);
 			_cmd = "SQUIT";
 		}
 		else if (counter && recievingMsgArr[0] == "JOIN") {
-			cmdJOIN.parseJoin(str, _Users, newFd);
+			cmdJOIN.parseJoin(str, _Users, newFd, _servername);
 			_cmd = "JOIN";
 		}
 		else if (counter && recievingMsgArr[0] == "PRIVMSG") {
-			cmdPRIVMSG.parsePrivmsg(str, _Users, _Channels, newFd);
+			cmdPRIVMSG.parsePrivmsg(str, _Users, _Channels, newFd, _servername);
+			_cmd = "PRIVMSG";
+		}
+		else if (counter && recievingMsgArr[0] == "NOTICE") {
+			cmdNOTICE.parseNoticeMsg(str, _Users, _Channels, newFd, _servername);
 			_cmd = "PRIVMSG";
 		}
 		else {

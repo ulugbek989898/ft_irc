@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   KILL.cpp                                           :+:      :+:    :+:   */
+/*   cmd_KILL.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 21:46:48 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/02 14:14:23 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/07 16:25:56 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 KILL::KILL(/* args */)
 {
-	servername = SERVER_NAME;
+	// servername = SERVER_NAME;
 }
 
 std::string		KILL::getServername() {
@@ -89,7 +89,7 @@ void	KILL::parseKill(std::string str, std::vector<Users>	_User, int fd) throw(st
 	
 	for (size_t i = 0; i < _User.size(); i++) {
 		if (send(_User[i].getUserFd(), buffer, tmp.length() , 0) == -1) {
-			perror("send");
+			std::cout << "sending error\n";
 		}
 	}
 }

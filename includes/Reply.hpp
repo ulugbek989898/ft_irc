@@ -6,14 +6,14 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 06:34:09 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/07 10:24:26 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/07 15:48:08 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef REPLY_HPP
 # define REPLY_HPP
 
-#define SERVER_NAME "localhost"
+#define SERVER_NAME(servername)
 
 #define ERR_NEEDMOREPARAMS(servername, client, command) \
 (":" + servername + " 461 * " + client + " " + command + " :Not enough parameters\n")
@@ -32,6 +32,9 @@
 
 #define PRIVMSG_REP(servername, nick, channelOrUser, msg) \
 (":" + nick + "!~" + nick + "@" + servername + " PRIVMSG " + channelOrUser + " :" + msg + "\n")
+
+#define NOTICE_REP(servername, nick, channelOrUser, msg) \
+(":" + nick + "!~" + nick + "@" + servername + " NOTICE " + channelOrUser + " :" + msg + "\n")
 
 #define ERR_ALREADYREGISTERED(servername, nickname) \
 (":" + servername + " 461 * " + nickname + " " + " :You may not reregister\n")
@@ -60,7 +63,7 @@
 #define ERR_NONICKNAMEGIVEN(servername, nickname) \
 (":" + servername + " 431 " + nickname + " :No nickname given\n")
 
-// #define RPL_KILL(operator, murderer, message) \
+// #define RPL_KILL(operator, murderer, message) 
 // (":" + operator + " Killed " + murderer + " " + message + "\n")
 
 #define RPL_KILL(servername, nickname, comment) \

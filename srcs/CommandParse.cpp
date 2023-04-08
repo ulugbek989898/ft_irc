@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/25 08:50:12 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/02 08:29:23 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/07 15:45:29 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 CommandParse::CommandParse(/* args */)
 {
-	servername = SERVER_NAME;
 	isOper = false;
 }
 

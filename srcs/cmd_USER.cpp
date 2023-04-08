@@ -1,18 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   USER_cmd.cpp                                       :+:      :+:    :+:   */
+/*   cmd_USER.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 14:23:05 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/01 14:23:20 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/08 06:09:33 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/CommandParse.hpp"
 
 void	CommandParse::parseUsername(std::string userNameMsg, std::vector<Users> Users, int fd) throw(std::runtime_error) {
+	pre_username = "";
 	std::stringstream	ss(userNameMsg);
 	std::string			word;
 	int					counter = 0;

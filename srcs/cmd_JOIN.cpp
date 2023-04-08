@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 09:09:05 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/05 14:32:04 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/08 07:10:09 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ JOIN::~JOIN()
 
 JOIN::JOIN(/* args */)
 {
-	servername = SERVER_NAME;
+	// servername = SERVER_NAME;
 }
 
 std::string	JOIN::getPreNickWithFd(std::vector<Users>	_Users, int fd) {
@@ -61,10 +61,10 @@ std::vector<std::string>	JOIN::getChannelsArr() {
 	return ChannelsArr;
 }
 
-void	JOIN::parseJoin(std::string str, std::vector<Users>	_User, int fd) throw(std::runtime_error) {
+void	JOIN::parseJoin(std::string str, std::vector<Users>	_User, int fd, std::string _servername) throw(std::runtime_error) {
 	(void) _User;
 	(void) fd;
-	std::cout << "str=" << str;
+	servername = _servername;
 	std::stringstream	ss(str);
 	std::string			word;
 	int					counter = 0;

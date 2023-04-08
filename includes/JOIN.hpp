@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 09:08:17 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/04 17:56:57 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/07 16:23:40 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ private:
 public:
 	JOIN(/* args */);
 	~JOIN();
-	void	parseJoin(std::string str, std::vector<Users>	_User, int fd) throw(std::runtime_error);
+	void	parseJoin(std::string str, std::vector<Users>	_User, int fd, std::string _servername) throw(std::runtime_error);
 	void	adv_tokenizer(std::string s, char del, std::vector<Users>	_User, int fd);
 	std::string	getServername();
 	std::vector<std::string>	getChannelsArr();

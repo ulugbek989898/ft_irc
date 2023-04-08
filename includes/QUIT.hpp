@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 14:29:49 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/02 14:53:40 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/07 15:55:46 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define QUIT_HPP
 
 #include <string>
+#include <cstring>
 #include <iostream>
 #include<unistd.h>
 #include <sstream>
@@ -33,7 +34,7 @@ public:
 	QUIT(/* args */);
 	~QUIT();
 	std::string	getServername();
-	void		parseQuit(std::string str, std::vector<Users>	_User, int fd) throw(std::runtime_error);
+	void		parseQuit(std::string str, std::vector<Users>	_User, int fd, std::string _servername) throw(std::runtime_error);
 	std::string	getPreNickWithFd(std::vector<Users>	_Users, int fd);
 };
 

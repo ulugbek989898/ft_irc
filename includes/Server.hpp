@@ -1,15 +1,17 @@
 #ifndef SERVER_HPP
 # define SERVER_HPP
 
-#define SERVER_NAME "localhost"
 #define LISTEN_ERR "error getting listening socket\n"
 #define POL_ERR "Error: poll()"
 #define FCNTL_ERR "Error: fcntl()"
 #define SEND_ERR "Error: send()"
+#define SETSOCKOPT_ERR "Error: setsockopt()"
+#define BIND_ERR "Error: bind()"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
+#include <cstring>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -42,6 +44,7 @@
 class Server
 {
 private:
+	std::string					_servername;
 	int							_port;
 	std::string					_password;
 	int							_listener;	// // Listening socket descriptor 
@@ -70,10 +73,13 @@ public:
 	void			run();
 	void			add_to_pollfds();
 	void			*get_in_addr(struct sockaddr *sa);
+	void			changeSocketOpt() throw(std::runtime_error);
+	void			makeFdNonBlock(int fd) throw(std::runtime_error);
+	void			bindSocket() throw(std::runtime_error);
+	void			listenToSocket() throw(std::runtime_error);
 	void			del_from_pollfds(int fd);
 	void			NewConnection(void);
 	void			ExistingConnection(int indexFd);
-	void			makeFdNonBlock(int fd) throw(std::runtime_error);
 	bool			requestFromServerToAuthonticate(int newUserFd);
 	void			ft_parse(int fd, std::string cmd) throw(std::runtime_error);
 	void			ft_print_users() const;

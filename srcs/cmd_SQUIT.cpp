@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 16:22:47 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/03 06:35:28 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/07 16:26:21 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 SQUIT::SQUIT(/* args */)
 {
-	servername = SERVER_NAME;
+	// servername = SERVER_NAME;
 }
 
 SQUIT::~SQUIT()
@@ -43,11 +43,12 @@ bool	SQUIT::getIsOperWithFd(std::vector<Users>	_Users, int fd) {
 	return false;
 }
 
-void	SQUIT::parseSquit(std::string str, std::vector<Users>	_User, int fd) throw(std::runtime_error) {
+void	SQUIT::parseSquit(std::string str, std::vector<Users>	_User, int fd, std::string _servername) throw(std::runtime_error) {
 	std::stringstream	ss(str);
 	std::string			word;
 	int					counter = 0;
 
+	servername = _servername;
 	squitCmdArr.clear();
 
 	while (ss >> word) {
@@ -80,7 +81,7 @@ void	SQUIT::parseSquit(std::string str, std::vector<Users>	_User, int fd) throw(
 	
 	for (size_t i = 0; i < _User.size(); i++) {
 		if (send(_User[i].getUserFd(), buffer, tmp.length() , 0) == -1) {
-			perror("send");
+			std::cout << "send error1\n";
 		}
 	}
 }

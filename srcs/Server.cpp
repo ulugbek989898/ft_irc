@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 07:05:48 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/07 09:02:14 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/08 07:18:28 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,12 @@ int	Server::get_listener_socket(void)
 	int listener;	 // Listening socket descriptor
 	int yes = 1;		// For setsockopt() SO_REUSEADDR, below
 	int rv;
+
+	char hostname[128];
+
+	gethostname(hostname, sizeof hostname);
+	printf("My hostname: %s\n", hostname);
+	_servername = hostname;
 
 	struct addrinfo hints, *ai, *p;
 
@@ -207,7 +213,7 @@ void	Server::ExistingConnection(int indexFd) {
 		del_from_pollfds(clientSockets[indexFd].fd);
 	} else {
 		// We got some good data from a client
-		cmdParse.parse(_buf, _Users, _Channels, clientSockets[indexFd].fd);
+		cmdParse.parse(_buf, _Users, _Channels, clientSockets[indexFd].fd, this->_servername);
 		if (cmdParse.getCmd() == "NICK")
 		{
 			msg = ":" + getNickFromUsers(clientSockets[indexFd].fd) + "!~" + cmdParse.getPreUsername() + "@localhost NICK :" + cmdParse.getPreNick() + "\r\n";

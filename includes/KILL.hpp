@@ -6,13 +6,14 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 06:25:07 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/02 14:13:55 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/07 15:19:10 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef KILL_HPP
 # define KILL_HPP
 #include <string>
+#include <cstring>
 #include <iostream>
 #include<unistd.h>
 #include <sstream>

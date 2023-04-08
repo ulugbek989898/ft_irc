@@ -1,33 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cmd_PRIVMSG.cpp                                    :+:      :+:    :+:   */
+/*   cmd_NOTICE.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/03 12:26:14 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/08 07:10:55 by uisroilo         ###   ########.fr       */
+/*   Created: 2023/04/07 14:19:16 by uisroilo          #+#    #+#             */
+/*   Updated: 2023/04/08 07:19:25 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/PRIVMSG.hpp"
+#include "../includes/NOTICE.hpp"
 
-PRIVMSG::PRIVMSG(/* args */)
+NOTICE::NOTICE(/* args */)
 {
 	// servername = SERVER_NAME;
 	isUser = false;
 	isChannel = false;
 }
 
-PRIVMSG::~PRIVMSG()
+NOTICE::~NOTICE()
 {
 }
 
-std::string	PRIVMSG::getServername() {
+std::string	NOTICE::getServername() {
 	return servername;
 }
 
-int		PRIVMSG::getFdFromUsers(std::string nick, std::vector<Users> _Users) const {
+int		NOTICE::getFdFromUsers(std::string nick, std::vector<Users> _Users) const {
 	for (size_t i = 0; i < _Users.size(); i++) {
 		if (_Users[i].getUserNick() == nick)
 			return _Users[i].getUserFd();
@@ -35,17 +35,17 @@ int		PRIVMSG::getFdFromUsers(std::string nick, std::vector<Users> _Users) const 
 	return 0;
 }
 
-void PRIVMSG::adv_tokenizer(std::string s, char del)
+void NOTICE::adv_tokenizer(std::string s, char del)
 {
 	std::stringstream ss(s);
 	std::string word;
 	while (!ss.eof()) {
 		getline(ss, word, del);
-		usersChannelsArr.push_back(word);		
+		usersChannelsArr.push_back(word);	
 	}
 }
 
-bool	PRIVMSG::checkNickExist(std::vector<Users>	_User, std::string nick) {
+bool	NOTICE::checkNickExist(std::vector<Users>	_User, std::string nick) {
 	for (size_t i = 0; i < _User.size(); i++)
 	{
 		if (_User[i].getUserNick() == nick) {
@@ -56,7 +56,7 @@ bool	PRIVMSG::checkNickExist(std::vector<Users>	_User, std::string nick) {
 	return false;
 }
 
-bool	PRIVMSG::checkChannelExist(std::vector<Channels> _Channels, std::string channel) {
+bool	NOTICE::checkChannelExist(std::vector<Channels> _Channels, std::string channel) {
 	for (size_t i = 0; i < _Channels.size(); i++)
 	{
 		if (_Channels[i].getChannelName() == channel) {
@@ -67,7 +67,7 @@ bool	PRIVMSG::checkChannelExist(std::vector<Channels> _Channels, std::string cha
 	return false;
 }
 
-std::vector<int>	PRIVMSG::getChannelUserFds(std::vector<Channels> _Channels, std::string channel) {
+std::vector<int>	NOTICE::getChannelUserFds(std::vector<Channels> _Channels, std::string channel) {
 	std::vector<int> tmp;
 	for (size_t i = 0; i < _Channels.size(); i++)
 	{
@@ -78,7 +78,7 @@ std::vector<int>	PRIVMSG::getChannelUserFds(std::vector<Channels> _Channels, std
 	return tmp;
 }
 
-std::string	PRIVMSG::getPreNickWithFd(std::vector<Users>	_Users, int fd) {
+std::string	NOTICE::getPreNickWithFd(std::vector<Users>	_Users, int fd) {
 	for (size_t i = 0; i < _Users.size(); i++) {
 			if (_Users[i].getUserFd() == fd) {
 				return _Users[i].getUserNick();
@@ -87,7 +87,7 @@ std::string	PRIVMSG::getPreNickWithFd(std::vector<Users>	_Users, int fd) {
 	return "";
 }
 
-void	PRIVMSG::parsePrivmsg(std::string str, std::vector<Users> _Users, std::vector<Channels> _Channels, int newFd, std::string _servername) throw(std::runtime_error) {
+void	NOTICE::parseNoticeMsg(std::string str, std::vector<Users> _Users, std::vector<Channels> _Channels, int newFd, std::string _servername) throw(std::runtime_error) {
 	std::stringstream	ss(str);
 	std::string			word;
 	int					counter = 0;
@@ -100,7 +100,6 @@ void	PRIVMSG::parsePrivmsg(std::string str, std::vector<Users> _Users, std::vect
 		privmsgCmdArr.push_back(word);
 		counter++;
 	}
-	
 	if (counter == 3)
 		msgSend = privmsgCmdArr[2];
 	else if (counter > 3) {
@@ -115,6 +114,7 @@ void	PRIVMSG::parsePrivmsg(std::string str, std::vector<Users> _Users, std::vect
 		}
 	}
 
+	
 	if (counter > 2) {
 		usersChannelsArr.clear();
 		adv_tokenizer(privmsgCmdArr[1], ',');
@@ -135,7 +135,7 @@ void	PRIVMSG::parsePrivmsg(std::string str, std::vector<Users> _Users, std::vect
 			else {
 				if (this->isUser) {
 					isUser = false;
-					std::string msg = PRIVMSG_REP(getServername(), getPreNickWithFd(_Users, newFd), usersChannelsArr[i], msgSend);
+					std::string msg = NOTICE_REP(getServername(), getPreNickWithFd(_Users, newFd), usersChannelsArr[i], msgSend);
 					int status = send(getFdFromUsers(usersChannelsArr[i], _Users), msg.c_str(), msg.length(), 0);
 					if (status <= 0)
 						throw std::runtime_error("SEND_ERR");
@@ -146,7 +146,7 @@ void	PRIVMSG::parsePrivmsg(std::string str, std::vector<Users> _Users, std::vect
 					{
 						int	fd = getChannelUserFds(_Channels, usersChannelsArr[i])[j];
 						std::cout << "userFd =" << fd << std::endl;
-						std::string msg = PRIVMSG_REP(getServername(), getPreNickWithFd(_Users, fd), usersChannelsArr[i], msgSend);
+						std::string msg = NOTICE_REP(getServername(), getPreNickWithFd(_Users, fd), usersChannelsArr[i], msgSend);
 						int status = send(fd, msg.c_str(), msg.length(), 0);
 						if (status <= 0)
 							throw std::runtime_error("SEND_ERR");
