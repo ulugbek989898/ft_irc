@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 12:16:15 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/08 07:11:40 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/08 14:03:02 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,10 +101,10 @@ void	CommandParse::parse(std::string str, std::vector<Users>	_Users, std::vector
 		}
 		else {
 			_cmd = "";
-			std::string msg = ERR_UNKNOWNCOMMAND(getServerName(), recievingMsgArr[0]);
-			int status = send(newFd, msg.c_str(), msg.length(), 0);
-			if (status <= 0)
-				throw std::runtime_error("SEND_ERR");
+			// std::string msg = ERR_UNKNOWNCOMMAND(getServerName(), recievingMsgArr[0]);
+			// int status = send(newFd, msg.c_str(), msg.length(), 0);
+			// if (status <= 0)
+			// 	throw std::runtime_error("SEND_ERR");
 		}
 	}
 	catch(const std::exception& e)

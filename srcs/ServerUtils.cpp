@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/29 09:08:07 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/08 06:09:19 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/08 15:24:42 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	Server::ft_parse(int newUserFd, std::string cmd) throw(std::runtime_error) 
 		if (nbytes == 0)
 			throw std::runtime_error("Connection closed");
 		else
-			perror("reciving:");
+			std::cout << "recieving\n";
 	}
 	else
 	{
@@ -71,4 +71,27 @@ bool	Server::checkChannelExistInChannelList(std::string chan) {
 		}
 	}
 	return false;
+}
+
+std::string	Server::getUserBufferWithFd(std::vector<Users> _Users, int fd) {
+	std::string	tmp = "";
+	for (size_t i = 0; i < _Users.size(); i++)
+	{
+		if (_Users[i].getUserFd() == fd) {
+			return _Users[i].getUserBuffer();
+		}
+	}
+	return tmp;
+}
+
+void	Server::setUserBufferWithFd(std::vector<Users> _Users, int fd) {
+	for (size_t i = 0; i < _Users.size(); i++)
+	{
+		if (_Users[i].getUserFd() == fd) {
+			std::cout << "yes sure1 " << _Users[i].getUserBuffer() << std::endl;
+			_Users[i].setUserBuffer();
+			std::cout << "yes sure2 " << _Users[i].getUserBuffer() << std::endl;
+			break ;
+		}
+	}
 }

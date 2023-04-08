@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 14:10:46 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/05 07:54:51 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/08 14:31:47 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,4 +52,18 @@ std::vector<std::string>	Users::getChannelList() const {
 
 void	Users::addChannel(std::string str) {
 	this->ChannelList.push_back(str);
+}
+
+void	Users::appendMsg(std::string str) {
+	std::cout << "before=" << u_buffer << std::endl;
+	this->u_buffer += str;
+	std::cout << "after=" << u_buffer << std::endl;
+}
+
+std::string	Users::getUserBuffer() {
+	return u_buffer;
+}
+
+void	Users::setUserBuffer() {
+	u_buffer.clear();
 }

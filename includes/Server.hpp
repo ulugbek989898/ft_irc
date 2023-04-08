@@ -44,6 +44,7 @@
 class Server
 {
 private:
+	bool						stopServer;
 	std::string					_servername;
 	int							_port;
 	std::string					_password;
@@ -63,6 +64,7 @@ private:
 	CommandParse				cmdParse;
 
 public:
+	void			terminateServer();
 	std::string		getPassword() const;
 	Server(int port, std::string password);
 	int				get_listener_socket(void);
@@ -97,7 +99,8 @@ public:
 
 	bool			checkUserInChannel(std::string chan, int fd);
 	bool			checkChannelExistInChannelList(std::string chan);
-
+	std::string		getUserBufferWithFd(std::vector<Users> _Users, int fd);
+	void			setUserBufferWithFd(std::vector<Users> _Users, int fd);
 	~Server();
 };
 

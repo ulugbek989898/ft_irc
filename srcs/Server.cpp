@@ -6,13 +6,18 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 07:05:48 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/08 07:18:28 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/08 15:28:51 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/Server.hpp"
 
 // Return a listening socket
+
+void Server::terminateServer() {
+	stopServer = true;
+}
+
 int	Server::get_listener_socket(void)
 {
 	int listener;	 // Listening socket descriptor
@@ -182,7 +187,7 @@ void	Server::NewConnection(void) {
 	_newFd = accept(_listener, (struct sockaddr *)&_remoteaddr, &_addrlen);
 	std::cout << "fddd = " << _newFd << std::endl;
 	if (_newFd == -1)
-		perror("accept");
+		std::cout << "accept\n";
 	else if (requestFromServerToAuthonticate(_newFd)) {
 		makeFdNonBlock(_newFd);
 		add_to_pollfds();
@@ -197,7 +202,6 @@ void	Server::ExistingConnection(int indexFd) {
 
 	memset(&_buf, 0, sizeof(_buf));
 	int nbytes = recv(clientSockets[indexFd].fd, _buf, sizeof(_buf), 0);
-
 	int sender_fd = clientSockets[indexFd].fd;
 
 	if (nbytes <= 0) {
@@ -208,12 +212,31 @@ void	Server::ExistingConnection(int indexFd) {
 			removeUserFromVector(sender_fd);
 			ft_print_users();
 		} else
-			perror("recv");
+			std::cout << "recv\n";
 		close(clientSockets[indexFd].fd);
 		del_from_pollfds(clientSockets[indexFd].fd);
 	} else {
 		// We got some good data from a client
-		cmdParse.parse(_buf, _Users, _Channels, clientSockets[indexFd].fd, this->_servername);
+		for (size_t i = 0; i < _Users.size(); i++) {
+			if (_Users[i].getUserFd() == sender_fd) {
+				_Users[i].appendMsg(_buf);
+				std::string	tmp = _Users[i].getUserBuffer();
+				if (tmp[tmp.size() - 1] != '\n')
+					return ;
+			}
+		}
+		
+		std::string str = getUserBufferWithFd(_Users, sender_fd);
+		// setUserBufferWithFd(_Users, sender_fd);
+		for (size_t i = 0; i < _Users.size(); i++)
+		{
+			if (_Users[i].getUserFd() == sender_fd) {
+				_Users[i].setUserBuffer();
+				break ;
+			}
+		}
+		// std::cout << "we are=" << getUserBufferWithFd(_Users, sender_fd);
+		cmdParse.parse(str, _Users, _Channels, clientSockets[indexFd].fd, this->_servername);
 		if (cmdParse.getCmd() == "NICK")
 		{
 			msg = ":" + getNickFromUsers(clientSockets[indexFd].fd) + "!~" + cmdParse.getPreUsername() + "@localhost NICK :" + cmdParse.getPreNick() + "\r\n";
@@ -297,7 +320,7 @@ void	Server::ExistingConnection(int indexFd) {
 }
 
 void	Server::run() {
-	while (1)
+	while (!stopServer)
 	{
 		int	status = poll(&clientSockets[0], _fdCount, -1);
 		checkStatusAndThrow(status, POL_ERR);
@@ -316,6 +339,10 @@ void	Server::run() {
 
 Server::~Server()
 {
+	for (std::vector<struct pollfd>::iterator it = clientSockets.begin(); it != clientSockets.end(); it++) {
+		close(it->fd);
+	}
+	std::cout << "\nServer has been terminated." << std::endl;
 }
 
 void	Server::removeUserFromVector(int fd) {

@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 14:09:22 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/05 07:55:02 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/08 14:11:42 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ private:
 	int	user_fd;
 	std::string	user_nick;
 	std::string	username;
+	std::string	u_buffer;
 
 	bool	isOPER;
 	std::vector<std::string>	ChannelList;
@@ -38,6 +39,9 @@ public:
 	void		setOPER(bool val);
 	std::vector<std::string>	getChannelList() const;
 	void		addChannel(std::string str);
+	void		appendMsg(std::string str);
+	std::string	getUserBuffer();
+	void		setUserBuffer();
 
 	~Users();
 };
