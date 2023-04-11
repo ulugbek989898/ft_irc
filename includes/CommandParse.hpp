@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/25 08:30:21 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/08 14:04:59 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/11 12:59:58 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ private:
 	std::string					servername;
 	std::string					pre_nick;
 	std::string					pre_username;
+	std::string					pre_password;
 
 	std::string					_password;
 	bool						isOper;
@@ -61,9 +62,13 @@ public:
 	CommandParse();
 	~CommandParse();
 	std::string		getPreNick();
+	void			setPreNick(std::string str);
 	std::string		getPreNickWithFd(std::vector<Users>	_Users, int fd);
 	bool			getIsOperWithFd(std::vector<Users>	_Users, int fd);
 	std::string		getPreUsername();
+	void			setPreUsername(std::string str);
+	std::string		getPrePassword();
+	void			setPrePassword(std::string str);
 	std::string		getPreUsernameWithFd(std::vector<Users>	_Users, int fd);
 	std::string		getServerName();
 	std::string		getCmd();
@@ -72,7 +77,7 @@ public:
 	void		parseNick(std::string nickMsg, std::vector<Users> Users, int fd) throw(std::runtime_error);
 	void		parseUsername(std::string _buf, std::vector<Users> Users, int fd) throw(std::runtime_error);
 
-	void		parseOPER(std::string _buf, std::vector<Users> Users, int fd, std::string password) throw(std::runtime_error);
+	void		parseOPER(std::string _buf, std::vector<Users> Users, int fd, std::string password) ;
 	bool		checkNickExist(std::vector<Users>	_User, std::string nick, int fd);
 	bool		checkNickSyntax(std::string nick);
 	bool		checkSymbol(char c);

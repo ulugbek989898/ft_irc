@@ -75,6 +75,7 @@ void	SQUIT::parseSquit(std::string str, std::vector<Users>	_User, int fd, std::s
 		else
 			tmp += squitCmdArr[j];
 	}
+	squitCmdArr.clear();
 	memset(&buffer, 0, sizeof(buffer));
 	tmp = RPL_SQUIT(getServerName(), squitCmdArr[1], tmp);
 	tmp.copy(buffer, sizeof(buffer));

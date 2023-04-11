@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 07:05:48 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/08 15:28:51 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/11 19:38:40 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,7 @@ void	Server::setUpPoll(){
 
 Server::Server(int port, std::string password)
 {
+	stopServer = false;
 	_port = port;
 	_password = password;
 	
@@ -121,7 +122,8 @@ std::string		Server::getPassword() const {
 void Server::add_to_pollfds()
 {
 	clientSockets.push_back(createPollStruct(_newFd, POLLIN));
-	_Users.push_back(Users(_newFd, cmdParse.getPreNick(), cmdParse.getPreUsername()));
+	_Users.push_back(Users(_newFd, "", ""));
+	std::cout << "size=" << _Users.size() << std::endl;
 	_fdCount++;
 	ft_print_users();
 }
@@ -152,32 +154,95 @@ void	Server::makeFdNonBlock(int fd) throw(std::runtime_error){
 	checkStatusAndThrow(status, FCNTL_ERR);
 }
 
-bool	Server::requestFromServerToAuthonticate(int newUserFd) {
+void	Server::requestFromServerToAuthonticate(int newUserFd, int userIndex) {
 	int 		status;
 	std::string msg;
-	// msg = PURPLE;
 
 	try
 	{
-		ft_show_auth_usage(newUserFd);
-
-		ft_parse(newUserFd, "PASS");
-		ft_parse(newUserFd, "NICK");
-		ft_parse(newUserFd, "USER");
+		memset(&_buf, 0, sizeof(_buf));
+		int nbytes = recv(newUserFd, _buf, sizeof(_buf), 0);
+		if (nbytes <= 0)
+		{
+			if (nbytes == 0)
+				throw std::runtime_error("Connection closed");
+			else
+				throw std::runtime_error("Recievingg1") ;
+		}
+		for (size_t i = 0; i < _Users.size(); i++) {
+			if (_Users[i].getUserFd() == newUserFd) {
+				_Users[i].appendMsg(_buf);
+				std::string	tmp = _Users[i].getUserBuffer();
+				if (tmp[tmp.size() - 1] != '\n')
+					return ;
+			}
+		}
 		
-		msg = "001 " + cmdParse.getPreNick() + " :Welcome to the Internet Relay Network " + cmdParse.getPreNick() + "\r\n";
-		status = send(newUserFd, msg.c_str(), msg.length(), 0);
-		checkStatusAndThrow(status, SEND_ERR);
+		std::string str = getUserBufferWithFd(_Users, newUserFd);
+		for (size_t i = 0; i < _Users.size(); i++)
+		{
+			if (_Users[i].getUserFd() == newUserFd) {
+				_Users[i].setUserBuffer();
+				break ;
+			}
+		}
+		std::stringstream	ss(str);
+		std::string			word;
+		int					counter = 0;
+
+		while (ss >> word) {
+			tmpBuf.push_back(word);
+			counter++;
+		}
+		if (counter > 1) {
+			ft_parse(newUserFd, tmpBuf[0], str);
+			if (_Users[userIndex].getPassword().empty() && tmpBuf[0] == "PASS") {
+				_Users[userIndex].addOrder(tmpBuf[0]);
+				_Users[userIndex].setPassword(cmdParse.getPrePassword());
+				cmdParse.setPrePassword("");
+			}
+			if (_Users[userIndex].getUserNick().empty() && tmpBuf[0] == "NICK") {
+				_Users[userIndex].addOrder(tmpBuf[0]);
+				_Users[userIndex].setNick(cmdParse.getPreNick());
+				ft_print_users();
+				cmdParse.setPreNick("");
+			}
+			if (_Users[userIndex].getUserName().empty() && tmpBuf[0] == "USER") {
+				_Users[userIndex].addOrder(tmpBuf[0]);
+				_Users[userIndex].setUsername(cmdParse.getPreUsername());
+				ft_print_users();
+				cmdParse.setPreUsername("");
+			}
+			if (!_Users[userIndex].getUserNick().empty() && !_Users[userIndex].getUserName().empty() && !_Users[userIndex].getPassword().empty()) {
+				checkOrder(userIndex);
+				_Users[userIndex].setIsAuth(true);
+				ft_print_users();
+				msg = "001 " + cmdParse.getPreNick() + " :Welcome to the Internet Relay Network " + cmdParse.getPreNick() + "\r\n";
+				status = send(newUserFd, msg.c_str(), msg.length(), 0);
+				checkStatusAndThrow(status, SEND_ERR);
+				showGeneralGuide(newUserFd);
+			}
+			tmpBuf.clear();
+		}
+		else {
+			std::cout << "str = " << str << ", counter = " << counter << "\n";
+			throw std::runtime_error("Params not enough");
+		}
 	}
 	catch(const std::exception& e)
 	{
+		tmpBuf.clear();
+		cmdParse.setPreNick("");
+		cmdParse.setPreUsername("");
+		cmdParse.setPrePassword("");
 		msg = e.what();
 		msg += "\r\n";
 		status = send(newUserFd, msg.c_str(), msg.length(), 0);
 		close(newUserFd);
-		return false;
+		removeUserFromVector(newUserFd);
+		del_from_pollfds(newUserFd);
+		ft_print_users();
 	}
-	return true;
 }
 
 void	Server::NewConnection(void) {
@@ -188,135 +253,131 @@ void	Server::NewConnection(void) {
 	std::cout << "fddd = " << _newFd << std::endl;
 	if (_newFd == -1)
 		std::cout << "accept\n";
-	else if (requestFromServerToAuthonticate(_newFd)) {
-		makeFdNonBlock(_newFd);
-		add_to_pollfds();
-		std::cout << "Server: new connection, newFd = " << _newFd << std::endl;
-		showGeneralGuide(_newFd);
-	}
+	makeFdNonBlock(_newFd);
+	add_to_pollfds();
+	std::cout << "Server: new connection, newFd = " << _newFd << std::endl;
+	ft_show_auth_usage(_newFd);
 }
 
 void	Server::ExistingConnection(int indexFd) {
 		// If not the listener, we're just a regular client
-	std::string	msg;
+	if (_Users[indexFd - 1].getIsAuth()) {
+		std::string	msg;
+		memset(&_buf, 0, sizeof(_buf));
+		int nbytes = recv(clientSockets[indexFd].fd, _buf, sizeof(_buf), 0);
+		int sender_fd = clientSockets[indexFd].fd;
 
-	memset(&_buf, 0, sizeof(_buf));
-	int nbytes = recv(clientSockets[indexFd].fd, _buf, sizeof(_buf), 0);
-	int sender_fd = clientSockets[indexFd].fd;
-
-	if (nbytes <= 0) {
-		// Got error or connection closed by client
-		if (nbytes == 0) {
-			// Connection closed
-			std::cout << "pollserver: socket " << sender_fd << " hung up\n";
-			removeUserFromVector(sender_fd);
-			ft_print_users();
-		} else
-			std::cout << "recv\n";
-		close(clientSockets[indexFd].fd);
-		del_from_pollfds(clientSockets[indexFd].fd);
-	} else {
-		// We got some good data from a client
-		for (size_t i = 0; i < _Users.size(); i++) {
-			if (_Users[i].getUserFd() == sender_fd) {
-				_Users[i].appendMsg(_buf);
-				std::string	tmp = _Users[i].getUserBuffer();
-				if (tmp[tmp.size() - 1] != '\n')
-					return ;
-			}
+		if (nbytes <= 0) {
+			// Got error or connection closed by client
+			if (nbytes == 0) {
+				// Connection closed
+				std::cout << "pollserver: socket " << sender_fd << " hung up\n";
+				removeUserFromVector(sender_fd);
+				ft_print_users();
+			} else
+				std::cout << "recv\n";
+			close(clientSockets[indexFd].fd);
+			del_from_pollfds(clientSockets[indexFd].fd);
 		}
-		
-		std::string str = getUserBufferWithFd(_Users, sender_fd);
-		// setUserBufferWithFd(_Users, sender_fd);
-		for (size_t i = 0; i < _Users.size(); i++)
-		{
-			if (_Users[i].getUserFd() == sender_fd) {
-				_Users[i].setUserBuffer();
-				break ;
-			}
-		}
-		// std::cout << "we are=" << getUserBufferWithFd(_Users, sender_fd);
-		cmdParse.parse(str, _Users, _Channels, clientSockets[indexFd].fd, this->_servername);
-		if (cmdParse.getCmd() == "NICK")
-		{
-			msg = ":" + getNickFromUsers(clientSockets[indexFd].fd) + "!~" + cmdParse.getPreUsername() + "@localhost NICK :" + cmdParse.getPreNick() + "\r\n";
-			int status = send(clientSockets[indexFd].fd, msg.c_str(), msg.length(), 0);
-			checkStatusAndThrow(status, SEND_ERR);
-			updateNickFromVector(clientSockets[indexFd].fd, cmdParse.getPreNick());
-			ft_print_users();
-		}
-		else if (cmdParse.getCmd() == "OPER")
-		{
-			this->setIsOperWithFd(cmdParse.getIsOper(), clientSockets[indexFd].fd);
-			ft_print_users();
-		}
-		else if (cmdParse.getCmd() == "KILL")
-		{
-			//remove user from database also pollfd socket, using his nickname
-			int	tmp_Fd = cmdParse.getFdFromUsers(cmdParse.getNickWithIndex(1), _Users);
+		else {
+			// We got some good data from a client
 			for (size_t i = 0; i < _Users.size(); i++) {
-				if (_Users[i].getUserFd() == tmp_Fd) {
-					for (size_t k = 0; k < _Users[i].getChannelList().size(); k++) {
-						for (size_t j = 0; j < this->_Channels.size(); j++) {
-							if (this->_Channels[j].getChannelName() == _Users[i].getChannelList()[k]) {
-								this->_Channels[j].removeUserFd(tmp_Fd);
-								break;
+				if (_Users[i].getUserFd() == sender_fd) {
+					_Users[i].appendMsg(_buf);
+					std::string	tmp = _Users[i].getUserBuffer();
+					if (tmp[tmp.size() - 1] != '\n')
+						return ;
+				}
+			}
+			
+			std::string str = getUserBufferWithFd(_Users, sender_fd);
+			// setUserBufferWithFd(_Users, sender_fd);
+			for (size_t i = 0; i < _Users.size(); i++)
+			{
+				if (_Users[i].getUserFd() == sender_fd) {
+					_Users[i].setUserBuffer();
+					break ;
+				}
+			}
+			// std::cout << "we are=" << getUserBufferWithFd(_Users, sender_fd);
+			cmdParse.parse(str, _Users, _Channels, clientSockets[indexFd].fd, this->_servername);
+			str.clear();
+			if (cmdParse.getCmd() == "NICK")
+			{
+				msg = ":" + getNickFromUsers(clientSockets[indexFd].fd) + "!~" + cmdParse.getPreUsername() + "@" + getServername() + " NICK :" + cmdParse.getPreNick() + "\r\n";
+				int status = send(clientSockets[indexFd].fd, msg.c_str(), msg.length(), 0);
+				checkStatusAndThrow(status, SEND_ERR);
+				updateNickFromVector(clientSockets[indexFd].fd, cmdParse.getPreNick());
+				ft_print_users();
+			}
+			else if (cmdParse.getCmd() == "OPER")
+			{
+				this->setIsOperWithFd(cmdParse.getIsOper(), clientSockets[indexFd].fd);
+				ft_print_users();
+			}
+			else if (cmdParse.getCmd() == "KILL")
+			{
+				//remove user from database also pollfd socket, using his nickname
+				int	tmp_Fd = cmdParse.getFdFromUsers(cmdParse.getNickWithIndex(1), _Users);
+				for (size_t i = 0; i < _Users.size(); i++) {
+					if (_Users[i].getUserFd() == tmp_Fd) {
+						for (size_t k = 0; k < _Users[i].getChannelList().size(); k++) {
+							for (size_t j = 0; j < this->_Channels.size(); j++) {
+								if (this->_Channels[j].getChannelName() == _Users[i].getChannelList()[k]) {
+									this->_Channels[j].removeUserFd(tmp_Fd);
+									break;
+								}
 							}
 						}
 					}
 				}
+				close (cmdParse.getFdFromUsers(cmdParse.getNickWithIndex(1), _Users));
+				del_from_pollfds(cmdParse.getFdFromUsers(cmdParse.getNickWithIndex(1), _Users));
+				removeUserFromVector(cmdParse.getFdFromUsers(cmdParse.getNickWithIndex(1), _Users));
+				ft_print_users();
 			}
-			close (cmdParse.getFdFromUsers(cmdParse.getNickWithIndex(1), _Users));
-			del_from_pollfds(sender_fd);
-			removeUserFromVector(cmdParse.getFdFromUsers(cmdParse.getNickWithIndex(1), _Users));
-			ft_print_users();
-		}
-		else if (cmdParse.getCmd() == "QUIT") {
-			for (size_t k = 0; k < _Users[indexFd - 1].getChannelList().size(); k++) {
-				for (size_t j = 0; j < this->_Channels.size(); j++) {
-					if (this->_Channels[j].getChannelName() == _Users[indexFd - 1].getChannelList()[k]) {
-						this->_Channels[j].removeUserFd(clientSockets[indexFd].fd);
-						break;
+			else if (cmdParse.getCmd() == "QUIT") {
+				for (size_t k = 0; k < _Users[indexFd - 1].getChannelList().size(); k++) {
+					for (size_t j = 0; j < this->_Channels.size(); j++) {
+						if (this->_Channels[j].getChannelName() == _Users[indexFd - 1].getChannelList()[k]) {
+							this->_Channels[j].removeUserFd(clientSockets[indexFd].fd);
+							break;
+						}
 					}
 				}
+				close (clientSockets[indexFd].fd);
+				del_from_pollfds(sender_fd);
+				removeUserFromVector(sender_fd);
+				ft_print_users();
 			}
-			close (clientSockets[indexFd].fd);
-			del_from_pollfds(sender_fd);
-			removeUserFromVector(sender_fd);
-			ft_print_users();
-		}
-		else if (cmdParse.getCmd() == "SQUIT") {
-			clientSockets.clear();
-			closeAllUserFds();
-			removeAllUsersFromVector();
-			ft_print_users();
-			exit(0);
-		}
-		else if (cmdParse.getCmd() == "JOIN") {
-			std::vector<std::string>	tmp = cmdParse.getJOIN().getChannelsArr();
+			else if (cmdParse.getCmd() == "JOIN") {
+				std::vector<std::string>	tmp = cmdParse.getJOIN().getChannelsArr();
 
-			for (size_t i = 0; i < tmp.size(); i++) {
-				if (!checkUserInChannel(tmp[i], clientSockets[indexFd].fd)) {
-					this->_Users[indexFd - 1].addChannel(tmp[i]);
-					if (checkChannelExistInChannelList(tmp[i])) {
-						for (size_t j = 0; j < this->_Channels.size(); j++) {
-							if (this->_Channels[j].getChannelName() == tmp[i]) {
-								this->_Channels[j].setUserFd(clientSockets[indexFd].fd);
-								break;
+				for (size_t i = 0; i < tmp.size(); i++) {
+					if (!checkUserInChannel(tmp[i], clientSockets[indexFd].fd)) {
+						this->_Users[indexFd - 1].addChannel(tmp[i]);
+						if (checkChannelExistInChannelList(tmp[i])) {
+							for (size_t j = 0; j < this->_Channels.size(); j++) {
+								if (this->_Channels[j].getChannelName() == tmp[i]) {
+									this->_Channels[j].setUserFd(clientSockets[indexFd].fd);
+									break;
+								}
 							}
 						}
+						else
+							this->_Channels.push_back(Channels(tmp[i], clientSockets[indexFd].fd));
 					}
-					else
-						this->_Channels.push_back(Channels(tmp[i], clientSockets[indexFd].fd));
 				}
+				tmp.clear();
 			}
-			tmp.clear();
+			
+			ft_print_users();
+			ft_print_Channels_Users();
 		}
-		
-		ft_print_users();
-		ft_print_Channels_Users();
 	}
-
+	else {
+		requestFromServerToAuthonticate(_Users[indexFd - 1].getUserFd(), indexFd - 1);
+	}
 }
 
 void	Server::run() {
@@ -335,6 +396,7 @@ void	Server::run() {
 			}
 		}
 	}
+	//this->~Server();
 }
 
 Server::~Server()
@@ -375,5 +437,5 @@ void	Server::updateNickFromVector(int fd, std::string new_nick) {
 
 void	Server::closeAllUserFds() {
 	for (size_t i = 0; i < _Users.size(); i++)
-		close(i + 5);
+		close(i + 3);
 }

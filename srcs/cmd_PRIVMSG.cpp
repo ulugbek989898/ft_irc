@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 12:26:14 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/08 07:10:55 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/08 23:06:14 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ void	PRIVMSG::parsePrivmsg(std::string str, std::vector<Users> _Users, std::vect
 	std::string			word;
 	int					counter = 0;
 
-	_servername = servername;
+	servername = _servername;
 	privmsgCmdArr.clear();
 	msgSend = "";
 
@@ -145,7 +145,7 @@ void	PRIVMSG::parsePrivmsg(std::string str, std::vector<Users> _Users, std::vect
 					for (size_t j = 0; j < getChannelUserFds(_Channels, usersChannelsArr[i]).size(); j++)
 					{
 						int	fd = getChannelUserFds(_Channels, usersChannelsArr[i])[j];
-						std::cout << "userFd =" << fd << std::endl;
+						// std::cout << "userFd =" << fd << std::endl;
 						std::string msg = PRIVMSG_REP(getServername(), getPreNickWithFd(_Users, fd), usersChannelsArr[i], msgSend);
 						int status = send(fd, msg.c_str(), msg.length(), 0);
 						if (status <= 0)

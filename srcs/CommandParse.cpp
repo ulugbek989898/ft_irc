@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/25 08:50:12 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/08 14:05:18 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/11 13:01:12 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,4 +82,16 @@ int		CommandParse::getFdFromUsers(std::string nick, std::vector<Users> _Users) c
 
 std::string		CommandParse::getNickWithIndex(int index) const {
 	return recievingMsgArr[index];
+}
+
+void	CommandParse::setPreNick(std::string str) {
+	pre_nick = str;
+}
+
+void	CommandParse::setPreUsername(std::string str) {
+	pre_username = str;
+}
+
+void	CommandParse::setPrePassword(std::string str) {
+	pre_password = str;
 }

@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 14:24:59 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/01 14:25:13 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/11 12:19:29 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,10 @@ void	CommandParse::parsePass(std::string str, std::string password) throw(std::r
 	{
 		if (password == passwordArr[1]) {
 			std::cout << "password correct" <<std::endl;
-
+			pre_password = passwordArr[1];
 		}
 		else {
+			std::cout << "password incorrect" <<std::endl;
 			passwordArr.clear();
 			throw std::runtime_error(ERR_PASSWDMISMATCH);
 		}

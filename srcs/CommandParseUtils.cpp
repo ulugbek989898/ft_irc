@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 12:16:15 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/08 14:03:02 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/11 12:20:14 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,10 @@ std::string	CommandParse::getPreUsernameWithFd(std::vector<Users>	_Users, int fd
 
 std::string	CommandParse::getPreUsername() {
 	return pre_username;
+}
+
+std::string	CommandParse::getPrePassword() {
+	return pre_password;
 }
 
 std::string	CommandParse::getCmd() {
@@ -76,30 +80,37 @@ void	CommandParse::parse(std::string str, std::vector<Users>	_Users, std::vector
 			_cmd = "OPER";
 		}
 		else if (counter && recievingMsgArr[0] == "KILL") {
+			recievingMsgArr.clear();
 			cmdKILL.parseKill(str, _Users, newFd);
 			_cmd = "KILL";
 		}
 		else if (counter && recievingMsgArr[0] == "QUIT") {
+			recievingMsgArr.clear();
 			cmdQUIT.parseQuit(str, _Users, newFd, _servername);
 			_cmd = "QUIT";
 		}
 		else if (counter && recievingMsgArr[0] == "SQUIT") {
+			recievingMsgArr.clear();
 			cmdSQUIT.parseSquit(str, _Users, newFd, _servername);
 			_cmd = "SQUIT";
 		}
 		else if (counter && recievingMsgArr[0] == "JOIN") {
+			recievingMsgArr.clear();
 			cmdJOIN.parseJoin(str, _Users, newFd, _servername);
 			_cmd = "JOIN";
 		}
 		else if (counter && recievingMsgArr[0] == "PRIVMSG") {
+			recievingMsgArr.clear();
 			cmdPRIVMSG.parsePrivmsg(str, _Users, _Channels, newFd, _servername);
 			_cmd = "PRIVMSG";
 		}
 		else if (counter && recievingMsgArr[0] == "NOTICE") {
+			recievingMsgArr.clear();
 			cmdNOTICE.parseNoticeMsg(str, _Users, _Channels, newFd, _servername);
 			_cmd = "PRIVMSG";
 		}
 		else {
+			recievingMsgArr.clear();
 			_cmd = "";
 			// std::string msg = ERR_UNKNOWNCOMMAND(getServerName(), recievingMsgArr[0]);
 			// int status = send(newFd, msg.c_str(), msg.length(), 0);

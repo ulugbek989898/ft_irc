@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/01 14:26:07 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/07 16:25:21 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/08 23:00:08 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	CommandParse::parseNick(std::string nickMsg, std::vector<Users>	_User, int 
 		if ((nickArr[1].length() > 10))
 		{
 			nickArr.clear();
-			throw std::runtime_error("try give nick length no more than 10");
+			throw std::runtime_error("try give nick length no more than 10\r\n");
 		}
 		if (checkNickExist(_User, nickArr[1], 0)) {
 			nickArr.clear();

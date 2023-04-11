@@ -44,6 +44,7 @@
 class Server
 {
 private:
+	std::vector<std::string>	tmpBuf;
 	bool						stopServer;
 	std::string					_servername;
 	int							_port;
@@ -64,6 +65,7 @@ private:
 	CommandParse				cmdParse;
 
 public:
+	std::string		getServername();
 	void			terminateServer();
 	std::string		getPassword() const;
 	Server(int port, std::string password);
@@ -82,8 +84,8 @@ public:
 	void			del_from_pollfds(int fd);
 	void			NewConnection(void);
 	void			ExistingConnection(int indexFd);
-	bool			requestFromServerToAuthonticate(int newUserFd);
-	void			ft_parse(int fd, std::string cmd) throw(std::runtime_error);
+	void			requestFromServerToAuthonticate(int newUserFd, int userIndex);
+	void			ft_parse(int fd, std::string cmd, std::string msg) throw(std::runtime_error);
 	void			ft_print_users() const;
 	void			ft_print_Channels_Users();
 	void			ft_show_auth_usage(int fd) throw(std::runtime_error);
@@ -101,6 +103,7 @@ public:
 	bool			checkChannelExistInChannelList(std::string chan);
 	std::string		getUserBufferWithFd(std::vector<Users> _Users, int fd);
 	void			setUserBufferWithFd(std::vector<Users> _Users, int fd);
+	void			checkOrder(int userIndex) throw(std::runtime_error);;
 	~Server();
 };
 
