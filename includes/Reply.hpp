@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 06:34:09 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/07 15:48:08 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/12 06:33:11 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@
 (":" + servername + " 403 " + nick + " " + channel + " :No such channel\n")
 
 #define PRIVMSG_REP(servername, nick, channelOrUser, msg) \
-(":" + nick + "!~" + nick + "@" + servername + " PRIVMSG " + channelOrUser + " :" + msg + "\n")
+(":" + nick + "!~" + nick + "@" + servername + " PRIVMSG " + channelOrUser + " " + msg + "\n")
 
 #define NOTICE_REP(servername, nick, channelOrUser, msg) \
 (":" + nick + "!~" + nick + "@" + servername + " NOTICE " + channelOrUser + " :" + msg + "\n")

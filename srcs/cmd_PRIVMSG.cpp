@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 12:26:14 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/08 23:06:14 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/12 07:04:58 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void PRIVMSG::adv_tokenizer(std::string s, char del)
 	std::string word;
 	while (!ss.eof()) {
 		getline(ss, word, del);
-		usersChannelsArr.push_back(word);		
+		usersChannelsArr.push_back(word);
 	}
 }
 

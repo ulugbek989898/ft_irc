@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 12:16:15 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/11 12:20:14 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/12 06:47:52 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ void	CommandParse::parse(std::string str, std::vector<Users>	_Users, std::vector
 		else if (counter && recievingMsgArr[0] == "NOTICE") {
 			recievingMsgArr.clear();
 			cmdNOTICE.parseNoticeMsg(str, _Users, _Channels, newFd, _servername);
-			_cmd = "PRIVMSG";
+			_cmd = "NOTICE";
 		}
 		else {
 			recievingMsgArr.clear();

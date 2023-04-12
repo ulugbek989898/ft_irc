@@ -89,7 +89,7 @@ public:
 	void			ft_print_users() const;
 	void			ft_print_Channels_Users();
 	void			ft_show_auth_usage(int fd) throw(std::runtime_error);
-	void			showGeneralGuide(int fd) throw(std::runtime_error);
+	void			showGeneralGuide(int fd, std::vector<Users> _Users, int i) throw(std::runtime_error);
 	void			removeUserFromVector(int fd);
 	void			removeAllUsersFromVector();
 	void			closeAllUserFds();

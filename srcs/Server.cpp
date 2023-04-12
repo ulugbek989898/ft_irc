@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 07:05:48 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/11 19:38:40 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/12 06:57:52 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -217,10 +217,11 @@ void	Server::requestFromServerToAuthonticate(int newUserFd, int userIndex) {
 				checkOrder(userIndex);
 				_Users[userIndex].setIsAuth(true);
 				ft_print_users();
-				msg = "001 " + cmdParse.getPreNick() + " :Welcome to the Internet Relay Network " + cmdParse.getPreNick() + "\r\n";
+				msg = "001 " + _Users[userIndex].getUserNick() + " :Welcome to the Internet Relay Network " + _Users[userIndex].getUserNick() + "\r\n";
 				status = send(newUserFd, msg.c_str(), msg.length(), 0);
+				msg.clear();
 				checkStatusAndThrow(status, SEND_ERR);
-				showGeneralGuide(newUserFd);
+				showGeneralGuide(newUserFd, _Users, userIndex);
 			}
 			tmpBuf.clear();
 		}
