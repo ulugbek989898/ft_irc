@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 12:26:14 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/12 07:04:58 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/12 12:56:29 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,16 +142,31 @@ void	PRIVMSG::parsePrivmsg(std::string str, std::vector<Users> _Users, std::vect
 				}
 				else if (this->isChannel) {
 					isChannel = false;
-					for (size_t j = 0; j < getChannelUserFds(_Channels, usersChannelsArr[i]).size(); j++)
+					int	flag = 0;
+					for (size_t k = 0; k < getChannelUserFds(_Channels, usersChannelsArr[i]).size(); k++)
 					{
-						int	fd = getChannelUserFds(_Channels, usersChannelsArr[i])[j];
-						// std::cout << "userFd =" << fd << std::endl;
-						std::string msg = PRIVMSG_REP(getServername(), getPreNickWithFd(_Users, fd), usersChannelsArr[i], msgSend);
-						int status = send(fd, msg.c_str(), msg.length(), 0);
-						if (status <= 0)
-							throw std::runtime_error("SEND_ERR");
+						int	fd = getChannelUserFds(_Channels, usersChannelsArr[i])[k];
+						if (fd == newFd)
+							flag = 1;
 					}
 					
+					if (flag) {
+						for (size_t j = 0; j < getChannelUserFds(_Channels, usersChannelsArr[i]).size(); j++)
+						{
+							int	fd = getChannelUserFds(_Channels, usersChannelsArr[i])[j];
+							
+							// std::cout << "userFd =" << fd << std::endl;
+							std::string msg = PRIVMSG_REP(getServername(), getPreNickWithFd(_Users, newFd), usersChannelsArr[i], msgSend);
+							if (fd != newFd) {
+								int status = send(fd, msg.c_str(), msg.length(), 0);
+								if (status <= 0)
+									throw std::runtime_error("SEND_ERR");
+							}
+						}
+					}
+					else {
+						throw std::runtime_error("we are not in channel\r\n");
+					}
 				}
 			}
 		}

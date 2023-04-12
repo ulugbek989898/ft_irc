@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 15:21:31 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/12 06:15:59 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/12 07:32:56 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ void	Server::ft_show_auth_usage(int fd) throw(std::runtime_error) {
 	msg += "001 " + _Users[i].getUserNick() + " /* setting new nickName: 'NICK <nickname>' */\r\n";
 	msg += "001 " + _Users[i].getUserNick() + " /* getting operator privileges to normal user: 'OPER <nickname> <pass>' */\r\n";
 	msg += "001 " + _Users[i].getUserNick() + " /* close the connection between a given client and the server: 'KILL <nickname> <comment>' */\r\n";
-	//msg += "001 " + _Users[i].getUserNick() + " /* disconnects a server from the network: 'SQUIT <server> :<comment>' */\r\n";
+	msg += "001 " + _Users[i].getUserNick() + " /* disconnects a server from the network: 'SQUIT <server> :<comment>' */\r\n";
 	msg += "001 " + _Users[i].getUserNick() + " /* terminate a client’s connection to the server: 'QUIT' */\r\n";
 	msg += "001 " + _Users[i].getUserNick() + " /* creating or joining existing channel: 'JOIN #<channel>' */\r\n";
 	msg += "001 " + _Users[i].getUserNick() + " /* send private messages to user or to channel: 'PRIVMSG <target>: <message>' */\r\n";

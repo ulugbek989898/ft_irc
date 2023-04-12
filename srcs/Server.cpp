@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 07:05:48 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/12 06:57:52 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/12 07:35:51 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -350,6 +350,18 @@ void	Server::ExistingConnection(int indexFd) {
 				del_from_pollfds(sender_fd);
 				removeUserFromVector(sender_fd);
 				ft_print_users();
+			}
+		else if (cmdParse.getCmd() == "SQUIT") 
+			{
+				
+				closeAllUserFds();
+				// for (std::vector<struct pollfd>::reverse_iterator it = clientSockets.rbegin(); it != clientSockets.rend(); ++it) {
+				// 	close(it->fd);
+				// }
+				clientSockets.clear();
+				// removeAllUsersFromVector();
+				_Users.clear();
+				exit(0);
 			}
 			else if (cmdParse.getCmd() == "JOIN") {
 				std::vector<std::string>	tmp = cmdParse.getJOIN().getChannelsArr();

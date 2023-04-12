@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 06:34:09 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/12 06:33:11 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/12 07:43:45 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@
 #define ERR_UNKNOWNCOMMAND(servername, command) \
 (":" + servername + " 421 * " + command + ": Unknown command\n")
 
-#define ERR_NOSUCHSERVER(servername, client) \
-(": ERROR  :No such server " + servername + "\n")
+#define ERR_NOSUCHSERVER(servername, client, realServername) \
+(": ERROR  :No such server " + servername + ", instead use " + realServername + "\n")
 
 #define ERR_NOSUCHNICK(servername, nick, client) \
 (":" + servername + " 401 " + nick + " " + client + " :No such nick\n")

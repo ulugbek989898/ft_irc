@@ -6,7 +6,7 @@
 /*   By: uisroilo <uisroilo@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 16:22:47 by uisroilo          #+#    #+#             */
-/*   Updated: 2023/04/07 16:26:21 by uisroilo         ###   ########.fr       */
+/*   Updated: 2023/04/12 07:37:22 by uisroilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void	SQUIT::parseSquit(std::string str, std::vector<Users>	_User, int fd, std::s
 	}
 	else if (getServerName() != squitCmdArr[1]) {
 		squitCmdArr.clear();
-		throw std::runtime_error(ERR_NOSUCHSERVER(squitCmdArr[1], getPreNickWithFd(_User, fd)));
+		throw std::runtime_error(ERR_NOSUCHSERVER(squitCmdArr[1], getPreNickWithFd(_User, fd), getServerName()));
 	}
 	else if (getIsOperWithFd(_User, fd) != true) {
 		squitCmdArr.clear();
